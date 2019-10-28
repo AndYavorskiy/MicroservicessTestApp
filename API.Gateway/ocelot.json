@@ -1,0 +1,18 @@
+{
+  "ReRoutes": [
+    {
+      "DownstreamPathTemplate": "/api/{everything}",
+      "DownstreamScheme": "http",
+      "ServiceName": "firstservice",
+      "UpstreamPathTemplate": "/api/firstservice/{everything}",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/{everything}",
+      "DownstreamScheme": "http",
+      "ServiceName": "secondservice",
+      "UpstreamPathTemplate": "/api/secondservice/{everything}",
+      "UpstreamHttpMethod": [ "Get" ]
+    }
+  ]
+}
