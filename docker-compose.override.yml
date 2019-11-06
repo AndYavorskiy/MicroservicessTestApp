@@ -5,6 +5,10 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
+      - ServiceConfig__serviceDiscoveryAddress=http://consul:8500
+      - ServiceConfig__serviceAddress=http://firstservice:80
+      - ServiceConfig__serviceName=firstservice
+      - ServiceConfig__serviceId=firstservice-v1
     ports:
       - "54140:80"
 
@@ -12,11 +16,58 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
+      - ServiceConfig__serviceDiscoveryAddress=http://consul:8500
+      - ServiceConfig__serviceAddress=http://secondservice:80
+      - ServiceConfig__serviceName=secondservice
+      - ServiceConfig__serviceId=secondservice-v1
+      - MongoDB__Host=mongo
     ports:
       - "54150:80"
+
+  thirdservice:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ServiceConfig__serviceDiscoveryAddress=http://consul:8500
+      - ServiceConfig__serviceAddress=http://thirdservice:80
+      - ServiceConfig__serviceName=thirdservice
+      - ServiceConfig__serviceId=thirdservice-v1
+    ports:
+      - "54160:80"
 
   api.gateway:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
     ports:
-      - "80:80"
+      - "4200:80"
+
+  consul:
+    ports:
+      - "5000:8500"
+
+  mongo:
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    ports:
+      - 27017:27017
+    volumes:
+      - type: volume
+        source: mongodb_data_volume
+        target: /data/db
+
+  mongo-express:
+      ports:
+        - 8081:8081
+      environment:
+        ME_CONFIG_MONGODB_ADMINUSERNAME: root
+        ME_CONFIG_MONGODB_ADMINPASSWORD: example
+
+  redis:
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - 6379:6379
+volumes:
+    mongodb_data_volume:
+      external: true

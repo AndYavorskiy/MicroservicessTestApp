@@ -2,18 +2,29 @@ version: '3.4'
 
 services:
   firstservice:
-    image: ${DOCKER_REGISTRY-}firstservice
+    image: firstservice:latest
     build:
       context: .
-      dockerfile:FirstService/Dockerfile
+      dockerfile: src/services/FirstService/Dockerfile
     container_name: firstservice
 
   secondservice:
-    image: ${DOCKER_REGISTRY-}secondservice
+    image: secondservice:latest
     build:
       context: .
-      dockerfile: SecondService/Dockerfile
+      dockerfile: src/services/SecondService/Dockerfile
     container_name: secondservice
+    depends_on:
+      - mongo
+
+  thirdservice:
+    image: thirdservice:latest
+    build:
+      context: .
+      dockerfile: src/services/ThirdService/Dockerfile
+    container_name: thirdservice
+    depends_on:
+      - redis
 
   api.gateway:
     image: apigateway:latest
@@ -21,3 +32,27 @@ services:
       context: .
       dockerfile: src/gateways/API.Gateway/Dockerfile
     container_name: apigateway
+
+  consul:
+    image: consul:latest
+    command: consul agent -dev -log-level=warn -ui -client=0.0.0.0
+    hostname: consul
+    container_name: consul
+
+  mongo:
+    image: mongo:4.2
+    restart: always
+    container_name: mongo
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    container_name: mongo-express
+    depends_on:
+      - mongo
+
+  redis:
+    image: redis
+    container_name: redis
+    expose:
+      - 6379
