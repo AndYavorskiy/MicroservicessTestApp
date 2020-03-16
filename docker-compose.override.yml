@@ -58,14 +58,14 @@ services:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
 
-  firstservice:
+  medicalservice:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
       - ServiceConfig__serviceDiscoveryAddress=http://consul:8500
-      - ServiceConfig__serviceAddress=http://firstservice:80
-      - ServiceConfig__serviceName=firstservice
-      - ServiceConfig__serviceId=firstservice-v1
+      - ServiceConfig__serviceAddress=http://medicalservice:80
+      - ServiceConfig__serviceName=medicalservice
+      - ServiceConfig__serviceId=medicalservice-v1
     ports:
       - "54140:80"
 

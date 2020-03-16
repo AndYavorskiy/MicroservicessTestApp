@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API.Gateway", "src\gateways
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{10FB8F4E-CC41-4582-8D5A-F05CDB30EB3D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FirstService", "src\services\FirstService\FirstService.csproj", "{5E440500-7EDD-4E11-957B-FBA593D150A5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MedicalService", "src\services\MedicalService\MedicalService.csproj", "{5E440500-7EDD-4E11-957B-FBA593D150A5}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "src\common\Infrastructure\Infrastructure.csproj", "{2E396C4B-DEFA-4605-A6ED-0D61146DA137}"
 EndProject
@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SecondService", "src\servic
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThirdService", "src\services\ThirdService\ThirdService.csproj", "{D0920F47-FB30-4295-9562-39EE2B6CE73D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationService", "src\services\NotificationService\NotificationService.csproj", "{18F4E436-DB88-4091-A2F0-5E504961B864}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NotificationService", "src\services\NotificationService\NotificationService.csproj", "{18F4E436-DB88-4091-A2F0-5E504961B864}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

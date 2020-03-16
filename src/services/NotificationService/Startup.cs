@@ -45,7 +45,7 @@ namespace NotificationService
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Version = "v1",
-                    Title = "Test Application - NotificationService HTTP API",
+                    Title = "Test Application - Notification Service HTTP API",
                 });
             });
         }
@@ -62,7 +62,7 @@ namespace NotificationService
 
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "FirstService API V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Notification API V1");
             });
 
             app.UseHttpsRedirection();
