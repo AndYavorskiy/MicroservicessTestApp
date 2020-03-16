@@ -1,7 +1,7 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace SecondService.Models
+namespace FoodService.Models
 {
     public class Module
     {

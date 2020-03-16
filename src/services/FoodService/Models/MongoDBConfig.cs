@@ -1,4 +1,4 @@
-﻿namespace SecondService.Models
+﻿namespace FoodService.Models
 {
     public class MongoDBConfig
     {

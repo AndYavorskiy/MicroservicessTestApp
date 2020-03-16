@@ -47,12 +47,12 @@ services:
       dockerfile: src/services/MedicalService/Dockerfile
     container_name: medicalservice
 
-  secondservice:
-    image: secondservice:latest
+  foodservice:
+    image: foodservice:latest
     build:
       context: .
-      dockerfile: src/services/SecondService/Dockerfile
-    container_name: secondservice
+      dockerfile: src/services/FoodService/Dockerfile
+    container_name: foodservice
     depends_on:
       - mongo
 

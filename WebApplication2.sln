@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MedicalService", "src\servi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "src\common\Infrastructure\Infrastructure.csproj", "{2E396C4B-DEFA-4605-A6ED-0D61146DA137}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SecondService", "src\services\SecondService\SecondService.csproj", "{A759FDD0-0E63-4D3D-AA50-CCB994743779}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FoodService", "src\services\FoodService\FoodService.csproj", "{A759FDD0-0E63-4D3D-AA50-CCB994743779}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThirdService", "src\services\ThirdService\ThirdService.csproj", "{D0920F47-FB30-4295-9562-39EE2B6CE73D}"
 EndProject

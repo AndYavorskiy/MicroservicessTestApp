@@ -1,11 +1,11 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
-using SecondService.DBContext;
-using SecondService.Models;
+using FoodService.DBContext;
+using FoodService.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace SecondService.Repositories
+namespace FoodService.Repositories
 {
     public class ModuleRepository : IModuleRepository
     {

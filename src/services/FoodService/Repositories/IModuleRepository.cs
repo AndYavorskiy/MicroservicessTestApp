@@ -1,8 +1,8 @@
-﻿using SecondService.Models;
+﻿using FoodService.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace SecondService.Repositories
+namespace FoodService.Repositories
 {
     public interface IModuleRepository
     {

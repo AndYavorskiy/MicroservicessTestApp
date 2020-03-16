@@ -1,7 +1,7 @@
 ﻿using MongoDB.Driver;
-using SecondService.Models;
+using FoodService.Models;
 
-namespace SecondService.DBContext
+namespace FoodService.DBContext
 {
     public interface IModuleContext
     {

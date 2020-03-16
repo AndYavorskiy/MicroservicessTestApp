@@ -1,13 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SecondService.Models;
-using SecondService.Repositories;
+using FoodService.Models;
+using FoodService.Repositories;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace SecondService.Controllers
+namespace FoodService.Controllers
 {
     [Route("api/[controller]")]
-    [Produces("application/json")]
     [ApiController]
     public class ModuleController : ControllerBase
     {

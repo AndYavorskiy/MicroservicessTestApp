@@ -69,14 +69,14 @@ services:
     ports:
       - "54140:80"
 
-  secondservice:
+  foodservice:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
       - ServiceConfig__serviceDiscoveryAddress=http://consul:8500
-      - ServiceConfig__serviceAddress=http://secondservice:80
-      - ServiceConfig__serviceName=secondservice
-      - ServiceConfig__serviceId=secondservice-v1
+      - ServiceConfig__serviceAddress=http://foodservice:80
+      - ServiceConfig__serviceName=foodservice
+      - ServiceConfig__serviceId=foodservice-v1
       - MongoDB__Host=mongo
     ports:
       - "54150:80"

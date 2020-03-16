@@ -5,11 +5,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using SecondService.DBContext;
-using SecondService.Models;
-using SecondService.Repositories;
+using FoodService.DBContext;
+using FoodService.Models;
+using FoodService.Repositories;
 
-namespace SecondService
+namespace FoodService
 {
     public class Startup
     {
@@ -26,9 +26,9 @@ namespace SecondService
             ConfigureConsul(services);
 
             services.Configure<MongoDBConfig>(Configuration.GetSection("MongoDB"));
-            
+
             services.AddScoped<IModuleContext, ModuleContext>();
-            
+
             services.AddScoped<IModuleRepository, ModuleRepository>();
 
             services.AddControllers();
@@ -38,7 +38,7 @@ namespace SecondService
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Version = "v1",
-                    Title = "Test Application - SecondService HTTP API"
+                    Title = "Food Service HTTP API"
                 });
             });
         }
@@ -55,7 +55,7 @@ namespace SecondService
 
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "SecondService API V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Food Service API V1");
             });
 
             app.UseHttpsRedirection();

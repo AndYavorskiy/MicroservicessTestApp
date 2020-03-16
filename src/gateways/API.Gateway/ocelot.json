@@ -10,8 +10,8 @@
         {
             "DownstreamPathTemplate": "/api/{everything}",
             "DownstreamScheme": "http",
-            "ServiceName": "secondservice",
-            "UpstreamPathTemplate": "/api/secondservice/{everything}",
+            "ServiceName": "foodservice",
+            "UpstreamPathTemplate": "/api/foodservice/{everything}",
             "UpstreamHttpMethod": [ "Get" ]
         },
         {
