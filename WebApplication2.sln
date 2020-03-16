@@ -19,7 +19,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "src\commo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SecondService", "src\services\SecondService\SecondService.csproj", "{A759FDD0-0E63-4D3D-AA50-CCB994743779}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThirdService", "src\services\ThirdService\ThirdService.csproj", "{D0920F47-FB30-4295-9562-39EE2B6CE73D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThirdService", "src\services\ThirdService\ThirdService.csproj", "{D0920F47-FB30-4295-9562-39EE2B6CE73D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationService", "src\services\NotificationService\NotificationService.csproj", "{18F4E436-DB88-4091-A2F0-5E504961B864}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{D0920F47-FB30-4295-9562-39EE2B6CE73D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D0920F47-FB30-4295-9562-39EE2B6CE73D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D0920F47-FB30-4295-9562-39EE2B6CE73D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18F4E436-DB88-4091-A2F0-5E504961B864}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18F4E436-DB88-4091-A2F0-5E504961B864}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18F4E436-DB88-4091-A2F0-5E504961B864}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18F4E436-DB88-4091-A2F0-5E504961B864}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -61,6 +67,7 @@ Global
 		{2E396C4B-DEFA-4605-A6ED-0D61146DA137} = {15E558B0-B219-4008-BEB1-C0157FC37371}
 		{A759FDD0-0E63-4D3D-AA50-CCB994743779} = {CF1C0F47-FB55-437F-8242-BE248173F32B}
 		{D0920F47-FB30-4295-9562-39EE2B6CE73D} = {CF1C0F47-FB55-437F-8242-BE248173F32B}
+		{18F4E436-DB88-4091-A2F0-5E504961B864} = {CF1C0F47-FB55-437F-8242-BE248173F32B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F47055CF-47B4-46B8-BB75-21F3337882E6}

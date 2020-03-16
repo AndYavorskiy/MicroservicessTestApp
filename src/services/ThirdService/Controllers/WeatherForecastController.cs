@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Infrastructure.RabbitMQ;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using RabbitMQ.Client;
 using ServiceStack.Redis;
 using ServiceStack.Redis.Generic;
 using System;
@@ -14,13 +16,17 @@ namespace ThirdService.Controllers
     {
         private readonly ILogger<WeatherForecastController> logger;
         private readonly IRedisClientsManager redisClientsManager;
+        private readonly IRabbitManager manager;
 
         private readonly string WeatherListKey = "weather-forecast-list";
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger, IRedisClientsManager redisClientsManager)
+        public WeatherForecastController(ILogger<WeatherForecastController> logger,
+            IRedisClientsManager redisClientsManager,
+            IRabbitManager manager)
         {
             this.logger = logger;
             this.redisClientsManager = redisClientsManager;
+            this.manager = manager;
         }
 
         [HttpGet]
@@ -59,6 +65,13 @@ namespace ThirdService.Controllers
             weatherForecast.Id = Guid.NewGuid();
 
             GetList().Add(weatherForecast);
+
+            manager.Publish(
+                message: weatherForecast,
+                exchangeName: "base.exchange.topic",
+                exchangeType: ExchangeType.Topic,
+                routeKey: "notifications.create"
+            );
 
             return Ok(weatherForecast);
         }
@@ -108,7 +121,7 @@ namespace ThirdService.Controllers
             redisClientsManager.GetClient()
                 .As<WeatherForecast>()
                 .RemoveItemFromList(GetList(), cechedItem);
-            
+
             return Ok(weatherForecastId);
         }
 

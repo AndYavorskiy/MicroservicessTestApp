@@ -1,30 +1,6 @@
 version: '3.4'
 
 services:
-  firstservice:
-    image: firstservice:latest
-    build:
-      context: .
-      dockerfile: src/services/FirstService/Dockerfile
-    container_name: firstservice
-
-  secondservice:
-    image: secondservice:latest
-    build:
-      context: .
-      dockerfile: src/services/SecondService/Dockerfile
-    container_name: secondservice
-    depends_on:
-      - mongo
-
-  thirdservice:
-    image: thirdservice:latest
-    build:
-      context: .
-      dockerfile: src/services/ThirdService/Dockerfile
-    container_name: thirdservice
-    depends_on:
-      - redis
 
   api.gateway:
     image: apigateway:latest
@@ -56,3 +32,46 @@ services:
     container_name: redis
     expose:
       - 6379
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    expose:
+      - 5672
+      - 15672
+
+  firstservice:
+    image: firstservice:latest
+    build:
+      context: .
+      dockerfile: src/services/FirstService/Dockerfile
+    container_name: firstservice
+
+  secondservice:
+    image: secondservice:latest
+    build:
+      context: .
+      dockerfile: src/services/SecondService/Dockerfile
+    container_name: secondservice
+    depends_on:
+      - mongo
+
+  thirdservice:
+    image: thirdservice:latest
+    build:
+      context: .
+      dockerfile: src/services/ThirdService/Dockerfile
+    container_name: thirdservice
+    depends_on:
+      - redis
+      - rabbitmq
+
+  notificationservice:
+    image: notificationservice
+    build:
+      context: .
+      dockerfile: src/services/NotificationService/Dockerfile
+    container_name: notificationservice
+    depends_on:
+      - mongo
+      - rabbitmq

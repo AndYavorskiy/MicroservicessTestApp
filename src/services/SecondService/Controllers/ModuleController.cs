@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Net.Http.Headers;
+﻿using Microsoft.AspNetCore.Mvc;
 using SecondService.Models;
 using SecondService.Repositories;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SecondService.Controllers
 {

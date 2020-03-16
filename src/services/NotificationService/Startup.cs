@@ -1,14 +1,21 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Infrastructure.RabbitMQ;
 using Infrastructure.ServiceDiscovery;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using ServiceStack.Redis;
+using NotificationService.Listeners;
 
-namespace ThirdService
+namespace NotificationService
 {
     public class Startup
     {
@@ -23,28 +30,24 @@ namespace ThirdService
         public void ConfigureServices(IServiceCollection services)
         {
             ConfigureConsul(services);
-
+            
             services.AddRabbit(Configuration);
 
             services.AddControllers();
+
+            services.AddHostedService<NotificationListener>();
+
+            // Add functionality to inject IOptions<T>
+            services.AddOptions();
 
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Version = "v1",
-                    Title = "Test Application - ThirdService HTTP API"
+                    Title = "Test Application - NotificationService HTTP API",
                 });
             });
-
-            var redisConStr = Configuration.GetConnectionString("redis");
-
-            services.AddDistributedRedisCache(option =>
-            {
-                option.Configuration = redisConStr;
-            });
-
-            services.AddSingleton<IRedisClientsManager>(c => new RedisManagerPool("redis:6379"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -59,7 +62,7 @@ namespace ThirdService
 
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "ThirdService API V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "FirstService API V1");
             });
 
             app.UseHttpsRedirection();

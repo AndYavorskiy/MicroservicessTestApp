@@ -20,6 +20,13 @@
       "ServiceName": "thirdservice",
       "UpstreamPathTemplate": "/api/thirdservice/{everything}",
       "UpstreamHttpMethod": [ "Get" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/{everything}",
+      "DownstreamScheme": "http",
+      "ServiceName": "notificationservice",
+      "UpstreamPathTemplate": "/api/notificationservice/{everything}",
+      "UpstreamHttpMethod": [ "Get" ]
     }
   ],
   "GlobalConfiguration": {
