@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using FoodService.Models;
+using FoodService.Entities;
 
 namespace FoodService.DBContext
 {
@@ -14,6 +15,6 @@ namespace FoodService.DBContext
             _db = client.GetDatabase(config.Value.Database);
         }
 
-        public IMongoCollection<Module> Modules => _db.GetCollection<Module>("Modules");
+        public IMongoCollection<Food> Food => _db.GetCollection<Food>("Food");
     }
 }

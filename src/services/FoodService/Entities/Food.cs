@@ -1,10 +1,15 @@
-﻿using System;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+using System;
 
-namespace MedicalService.Entities
+namespace FoodService.Entities
 {
-    public class Medicaments
+    public class Food
     {
-        public int Id { get; set; }
+        [BsonId]
+        public ObjectId InternalId { get; set; }
+
+        public long Id { get; set; }
 
         public string Name { get; set; }
 

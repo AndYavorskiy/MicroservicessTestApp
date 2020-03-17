@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace MedicalService.Entities
+namespace FoodService.Models
 {
-    public class Medicaments
+    public class FoodModel
     {
         public int Id { get; set; }
 

@@ -29,7 +29,7 @@ namespace FoodService
 
             services.AddScoped<IModuleContext, ModuleContext>();
 
-            services.AddScoped<IModuleRepository, ModuleRepository>();
+            services.AddScoped<IFoodRepository, FoodRepository>();
 
             services.AddControllers();
 

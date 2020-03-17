@@ -4,48 +4,49 @@ using FoodService.DBContext;
 using FoodService.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using FoodService.Entities;
 
 namespace FoodService.Repositories
 {
-    public class ModuleRepository : IModuleRepository
+    public class FoodRepository : IFoodRepository
     {
         private readonly IModuleContext _context;
 
-        public ModuleRepository(IModuleContext context)
+        public FoodRepository(IModuleContext context)
         {
             _context = context;
         }
 
-        public Task<List<Module>> GetAllModules()
+        public Task<List<Food>> GetAllModules()
         {
             return _context
-                .Modules
+                .Food
                 .Find(x => true)
-                .SortBy(x => x.Id)
+                .SortBy(x => x.Name)
                 .ToListAsync();
         }
 
 
-        public Task<Module> GetModule(long id)
+        public Task<Food> GetModule(long id)
         {
             return _context
-                    .Modules
+                    .Food
                     .Find(s => s.Id == id)
                     .FirstOrDefaultAsync();
         }
 
-        public async Task<Module> Create(Module todo)
+        public async Task<Food> Create(Food todo)
         {
-            await _context.Modules.InsertOneAsync(todo);
+            await _context.Food.InsertOneAsync(todo);
 
             return todo;
         }
 
-        public async Task<bool> Update(Module todo)
+        public async Task<bool> Update(Food todo)
         {
             var updateResult =
                 await _context
-                    .Modules
+                    .Food
                     .ReplaceOneAsync(
                         filter: g => g.Id == todo.Id,
                         replacement: todo);
@@ -57,7 +58,7 @@ namespace FoodService.Repositories
         public async Task<bool> Delete(long id)
         {
             var deleteResult = await _context
-                .Modules
+                .Food
                 .DeleteOneAsync(m => m.Id == id);
 
             return deleteResult.IsAcknowledged
@@ -66,7 +67,7 @@ namespace FoodService.Repositories
 
         public async Task<long> GetNextId()
         {
-            return await _context.Modules.CountDocumentsAsync(new BsonDocument()) + 1;
+            return await _context.Food.CountDocumentsAsync(new BsonDocument()) + 1;
         }
     }
 }

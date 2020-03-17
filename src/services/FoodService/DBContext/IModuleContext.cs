@@ -1,10 +1,10 @@
-﻿using MongoDB.Driver;
-using FoodService.Models;
+﻿using FoodService.Entities;
+using MongoDB.Driver;
 
 namespace FoodService.DBContext
 {
     public interface IModuleContext
     {
-        IMongoCollection<Module> Modules { get; }
+        IMongoCollection<Food> Food { get; }
     }
 }

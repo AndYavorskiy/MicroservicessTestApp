@@ -3,28 +3,31 @@ using FoodService.Models;
 using FoodService.Repositories;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using FoodService.Entities;
+using System;
+using MongoDB.Bson;
 
 namespace FoodService.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ModuleController : ControllerBase
+    public class FoodController : ControllerBase
     {
-        private readonly IModuleRepository moduleRepository;
+        private readonly IFoodRepository moduleRepository;
 
-        public ModuleController(IModuleRepository moduleRepository)
+        public FoodController(IFoodRepository moduleRepository)
         {
             this.moduleRepository = moduleRepository;
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Module>>> Get()
+        public async Task<ActionResult<List<FoodModel>>> Get()
         {
             return new ObjectResult(await moduleRepository.GetAllModules());
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Module>> Get(long id)
+        public async Task<ActionResult<FoodModel>> Get(long id)
         {
             var todo = await moduleRepository.GetModule(id);
             if (todo == null)
@@ -36,26 +39,38 @@ namespace FoodService.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Module>> Post(Module module)
+        public async Task<ActionResult<FoodModel>> Post(FoodModel module)
         {
-            module.Id = await moduleRepository.GetNextId();
-            await moduleRepository.Create(module);
+            var food = new Food
+            {
+                Id = await moduleRepository.GetNextId(),
+                Name = module.Name,
+                Amount = module.Amount,
+                Description = module.Description,
+                ExpirationDate = module.ExpirationDate,
+                UserId = new Guid()
+            };
+
+            await moduleRepository.Create(food);
 
             return new OkObjectResult(module);
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<Module>> Put(long id, [FromBody] Module module)
+        public async Task<ActionResult<FoodModel>> Put(long id, [FromBody] FoodModel module)
         {
-            var moduleFromDb = await moduleRepository.GetModule(id);
-            if (moduleFromDb == null)
+            var food = await moduleRepository.GetModule(id);
+            if (food == null)
             {
                 return new NotFoundResult();
             }
 
-            module.Id = moduleFromDb.Id;
-            module.InternalId = moduleFromDb.InternalId;
-            await moduleRepository.Update(module);
+            food.Name = module.Name;
+            food.Amount = module.Amount;
+            food.Description = module.Description;
+            food.ExpirationDate = module.ExpirationDate;
+
+            await moduleRepository.Update(food);
 
             return new OkObjectResult(module);
         }
