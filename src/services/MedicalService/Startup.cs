@@ -1,4 +1,7 @@
+using FoodService.Repositories;
+using Infrastructure.Models;
 using Infrastructure.ServiceDiscovery;
+using MedicalService.DBContext;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -22,10 +25,12 @@ namespace MedicalService
         {
             ConfigureConsul(services);
 
-            services.AddControllers();
+            services.Configure<MongoDBConfig>(Configuration.GetSection("MongoDB"));
+            services.AddScoped<IHomeHelperDbContext, HomeHelperDbContext>();
 
-            // Add functionality to inject IOptions<T>
-            services.AddOptions();
+            services.AddScoped<IMedicamentsRepository, MedicamentsRepository>();
+
+            services.AddControllers();
 
             services.AddSwaggerGen(c =>
             {

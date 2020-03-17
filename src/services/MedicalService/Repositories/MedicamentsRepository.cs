@@ -1,55 +1,53 @@
-﻿using MongoDB.Bson;
+﻿using MedicalService.DBContext;
+using MedicalService.Entities;
 using MongoDB.Driver;
-using FoodService.DBContext;
-using FoodService.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using FoodService.Entities;
 
 namespace FoodService.Repositories
 {
-    public class FoodRepository : IFoodRepository
+    public class MedicamentsRepository : IMedicamentsRepository
     {
         private readonly IHomeHelperDbContext _context;
 
-        public FoodRepository(IHomeHelperDbContext context)
+        public MedicamentsRepository(IHomeHelperDbContext context)
         {
             _context = context;
         }
 
-        public Task<List<Food>> GetAll()
+        public Task<List<Medicaments>> GetAll()
         {
             return _context
-                .Food
+                .Medicaments
                 .Find(x => true)
                 .SortBy(x => x.Name)
                 .ToListAsync();
         }
 
 
-        public Task<Food> Get(string id)
+        public Task<Medicaments> Get(string id)
         {
             return _context
-                    .Food
+                    .Medicaments
                     .Find(s => s.Id == id)
                     .FirstOrDefaultAsync();
         }
 
-        public async Task<Food> Create(Food todo)
+        public async Task<Medicaments> Create(Medicaments medicaments)
         {
-            await _context.Food.InsertOneAsync(todo);
+            await _context.Medicaments.InsertOneAsync(medicaments);
 
-            return todo;
+            return medicaments;
         }
 
-        public async Task<bool> Update(Food todo)
+        public async Task<bool> Update(Medicaments medicaments)
         {
             var updateResult =
                 await _context
-                    .Food
+                    .Medicaments
                     .ReplaceOneAsync(
-                        filter: g => g.Id == todo.Id,
-                        replacement: todo);
+                        filter: g => g.Id == medicaments.Id,
+                        replacement: medicaments);
 
             return updateResult.IsAcknowledged
                     && updateResult.ModifiedCount > 0;
@@ -58,8 +56,8 @@ namespace FoodService.Repositories
         public async Task<bool> Delete(string id)
         {
             var deleteResult = await _context
-                .Food
-                .DeleteOneAsync(x=>x.Id == id);
+                .Medicaments
+                .DeleteOneAsync(x => x.Id == id);
 
             return deleteResult.IsAcknowledged
                 && deleteResult.DeletedCount > 0;

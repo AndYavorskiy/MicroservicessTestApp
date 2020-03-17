@@ -6,16 +6,14 @@ namespace FoodService.Repositories
 {
     public interface IFoodRepository
     {
-        Task<List<Food>> GetAllModules();
+        Task<List<Food>> GetAll();
 
-        Task<Food> GetModule(long id);
+        Task<Food> Get(string id);
 
         Task<Food> Create(Food module);
 
         Task<bool> Update(Food module);
 
-        Task<bool> Delete(long id);
-
-        Task<long> GetNextId();
+        Task<bool> Delete(string id);
     }
 }

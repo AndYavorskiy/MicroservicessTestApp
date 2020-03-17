@@ -6,10 +6,8 @@ namespace FoodService.Entities
 {
     public class Food
     {
-        [BsonId]
-        public ObjectId InternalId { get; set; }
-
-        public long Id { get; set; }
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string Id{ get; set; }
 
         public string Name { get; set; }
 

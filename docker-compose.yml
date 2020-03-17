@@ -46,6 +46,8 @@ services:
       context: .
       dockerfile: src/services/MedicalService/Dockerfile
     container_name: medicalservice
+    depends_on:
+      - mongo
 
   foodservice:
     image: foodservice:latest

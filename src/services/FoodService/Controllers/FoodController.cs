@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FoodService.Entities;
 using FoodService.Models;
 using FoodService.Repositories;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using FoodService.Entities;
+using Microsoft.AspNetCore.Mvc;
 using System;
-using MongoDB.Bson;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace FoodService.Controllers
 {
@@ -13,53 +13,54 @@ namespace FoodService.Controllers
     [ApiController]
     public class FoodController : ControllerBase
     {
-        private readonly IFoodRepository moduleRepository;
+        private readonly IFoodRepository foodRepository;
 
-        public FoodController(IFoodRepository moduleRepository)
+        public FoodController(IFoodRepository foodRepository)
         {
-            this.moduleRepository = moduleRepository;
+            this.foodRepository = foodRepository;
         }
 
         [HttpGet]
         public async Task<ActionResult<List<FoodModel>>> Get()
         {
-            return new ObjectResult(await moduleRepository.GetAllModules());
+            return new ObjectResult((await foodRepository.GetAll())
+                .Select(MapToModel)
+                .ToList());
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<FoodModel>> Get(long id)
+        public async Task<ActionResult<FoodModel>> Get(string id)
         {
-            var todo = await moduleRepository.GetModule(id);
-            if (todo == null)
+            var food = await foodRepository.Get(id);
+            if (food == null)
             {
                 return new NotFoundResult();
             }
 
-            return new ObjectResult(todo);
+            return new ObjectResult(MapToModel(food));
         }
 
         [HttpPost]
-        public async Task<ActionResult<FoodModel>> Post(FoodModel module)
+        public async Task<ActionResult<FoodModel>> Create(FoodModel foodModel)
         {
             var food = new Food
             {
-                Id = await moduleRepository.GetNextId(),
-                Name = module.Name,
-                Amount = module.Amount,
-                Description = module.Description,
-                ExpirationDate = module.ExpirationDate,
+                Name = foodModel.Name,
+                Amount = foodModel.Amount,
+                Description = foodModel.Description,
+                ExpirationDate = foodModel.ExpirationDate,
                 UserId = new Guid()
             };
 
-            await moduleRepository.Create(food);
+            await foodRepository.Create(food);
 
-            return new OkObjectResult(module);
+            return new ObjectResult(MapToModel(food));
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<FoodModel>> Put(long id, [FromBody] FoodModel module)
+        public async Task<ActionResult<FoodModel>> Update(string id, [FromBody] FoodModel module)
         {
-            var food = await moduleRepository.GetModule(id);
+            var food = await foodRepository.Get(id);
             if (food == null)
             {
                 return new NotFoundResult();
@@ -70,23 +71,34 @@ namespace FoodService.Controllers
             food.Description = module.Description;
             food.ExpirationDate = module.ExpirationDate;
 
-            await moduleRepository.Update(food);
+            await foodRepository.Update(food);
 
-            return new OkObjectResult(module);
+            return new ObjectResult(MapToModel(food));
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(long id)
+        public async Task<IActionResult> Delete(string id)
         {
-            var post = await moduleRepository.GetModule(id);
-            if (post == null)
+            var food = await foodRepository.Get(id);
+            if (food == null)
             {
                 return new NotFoundResult();
             }
 
-            await moduleRepository.Delete(id);
+            await foodRepository.Delete(id);
 
-            return new OkResult();
+            return new NoContentResult();
         }
+
+        private static FoodModel MapToModel(Food food) => new FoodModel
+        {
+
+            Id = food.Id,
+            Name = food.Name,
+            Amount = food.Amount,
+            Description = food.Description,
+            ExpirationDate = food.ExpirationDate,
+            UserId = food.UserId
+        };
     }
 }

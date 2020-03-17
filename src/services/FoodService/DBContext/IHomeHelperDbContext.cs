@@ -3,7 +3,7 @@ using MongoDB.Driver;
 
 namespace FoodService.DBContext
 {
-    public interface IModuleContext
+    public interface IHomeHelperDbContext
     {
         IMongoCollection<Food> Food { get; }
     }

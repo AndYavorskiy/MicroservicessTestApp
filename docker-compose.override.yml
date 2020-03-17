@@ -66,6 +66,7 @@ services:
       - ServiceConfig__serviceAddress=http://medicalservice:80
       - ServiceConfig__serviceName=medicalservice
       - ServiceConfig__serviceId=medicalservice-v1
+      - MongoDB__Host=mongo
     ports:
       - "54140:80"
 

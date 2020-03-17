@@ -11,15 +11,15 @@
     "profiles": {
         "IIS Express": {
             "commandName": "IISExpress",
-            "launchBrowser": true,
-            "launchUrl": "api/weatherforecast",
+            "launchBrowser": false,
+            "launchUrl": "api/swagger",
             "environmentVariables": {
                 "ASPNETCORE_ENVIRONMENT": "Development"
             }
         },
         "MedicalService": {
             "commandName": "Project",
-            "launchBrowser": true,
+            "launchBrowser": false,
             "launchUrl": "swagger",
             "environmentVariables": {
                 "ASPNETCORE_ENVIRONMENT": "Development"
@@ -28,7 +28,7 @@
         },
         "Docker": {
             "commandName": "Docker",
-            "launchBrowser": true,
+            "launchBrowser": false,
             "launchUrl": "swagger",
             "environmentVariables": {
                 "ASPNETCORE_URLS": "https://+:443;http://+:80",

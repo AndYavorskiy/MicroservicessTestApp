@@ -2,14 +2,15 @@
 using MongoDB.Driver;
 using FoodService.Models;
 using FoodService.Entities;
+using Infrastructure.Models;
 
 namespace FoodService.DBContext
 {
-    public class ModuleContext: IModuleContext
+    public class HomeHelperDbContext: IHomeHelperDbContext
     {
         private readonly IMongoDatabase _db;
 
-        public ModuleContext(IOptions<MongoDBConfig> config)
+        public HomeHelperDbContext(IOptions<MongoDBConfig> config)
         {
             var client = new MongoClient(config.Value.ConnectionString);
             _db = client.GetDatabase(config.Value.Database);

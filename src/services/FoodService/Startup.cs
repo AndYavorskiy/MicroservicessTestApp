@@ -8,6 +8,7 @@ using Microsoft.OpenApi.Models;
 using FoodService.DBContext;
 using FoodService.Models;
 using FoodService.Repositories;
+using Infrastructure.Models;
 
 namespace FoodService
 {
@@ -26,8 +27,7 @@ namespace FoodService
             ConfigureConsul(services);
 
             services.Configure<MongoDBConfig>(Configuration.GetSection("MongoDB"));
-
-            services.AddScoped<IModuleContext, ModuleContext>();
+            services.AddScoped<IHomeHelperDbContext, HomeHelperDbContext>();
 
             services.AddScoped<IFoodRepository, FoodRepository>();
 
