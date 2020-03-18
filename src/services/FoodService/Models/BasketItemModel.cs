@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MedicalService.Models
+namespace FoodService.Models
 {
     public class BasketItemModel
     {

@@ -1,3 +1,8 @@
+using FoodService.DBContext;
+using FoodService.Listeners;
+using FoodService.Repositories;
+using Infrastructure.Models;
+using Infrastructure.RabbitMQ;
 using Infrastructure.ServiceDiscovery;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -5,11 +10,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using FoodService.DBContext;
-using FoodService.Models;
-using FoodService.Repositories;
-using Infrastructure.Models;
-using Infrastructure.RabbitMQ;
 
 namespace FoodService
 {
@@ -32,6 +32,8 @@ namespace FoodService
             services.Configure<MongoDBConfig>(Configuration.GetSection("MongoDB"));
             services.AddScoped<IHomeHelperDbContext, HomeHelperDbContext>();
             services.AddScoped<IFoodRepository, FoodRepository>();
+
+            services.AddHostedService<PurchaseFoodListener>();
 
             services.AddControllers();
 
