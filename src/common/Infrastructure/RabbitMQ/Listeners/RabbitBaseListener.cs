@@ -23,7 +23,7 @@ namespace Infrastructure.RabbitMQ.Listeners
             channel = pooledObjectPolicy.Create();
         }
 
-        public abstract bool ProcessData(T message);
+        public abstract Task<bool> ProcessData(T message);
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
@@ -35,19 +35,19 @@ namespace Infrastructure.RabbitMQ.Listeners
         {
             Console.WriteLine($"RabbitListener register, exchange: {ExchangeName}, queue: {QueueName}, routeKey:{RouteKey}");
 
-            channel.ExchangeDeclare(exchange: ExchangeName, durable: true, type: ExchangeType.Topic);
+            channel.ExchangeDeclare(exchange: ExchangeName, type: ExchangeType.Topic);
 
-            channel.QueueDeclare(queue: QueueName, durable: true,  exclusive: false, autoDelete: false);
+            channel.QueueDeclare(queue: QueueName, exclusive: false, autoDelete: false);
 
             channel.QueueBind(queue: QueueName, exchange: ExchangeName, routingKey: RouteKey);
 
             var consumer = new EventingBasicConsumer(channel);
-            consumer.Received += (model, ea) =>
+            consumer.Received += async (model, ea) =>
             {
                 var message = Encoding.UTF8.GetString(ea.Body);
                 var obj = JsonConvert.DeserializeObject<T>(message);
 
-                var result = ProcessData(obj);
+                var result = await ProcessData(obj);
                 if (result)
                 {
                     channel.BasicAck(ea.DeliveryTag, true);

@@ -29,8 +29,8 @@ namespace BasketService
             services.AddRabbit(Configuration);
 
             services.Configure<MongoDBConfig>(Configuration.GetSection("MongoDB"));
-            services.AddScoped<IHomeHelperDbContext, HomeHelperDbContext>();
-            services.AddScoped<IBasketItemRepository, BasketItemRepository>();
+            services.AddTransient<IHomeHelperDbContext, HomeHelperDbContext>();
+            services.AddTransient<IBasketItemRepository, BasketItemRepository>();
 
             services.AddControllers();
 

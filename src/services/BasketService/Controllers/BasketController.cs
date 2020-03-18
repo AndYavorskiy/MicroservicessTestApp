@@ -126,6 +126,7 @@ namespace BasketService.Controllers
             await basketItemRepository.Delete(completePurchaseModel.Id);
 
             basketItem.Amount = completePurchaseModel.Amount;
+            basketItem.ExpirationDate = completePurchaseModel.ExpirationDate;
 
             var itemTypeRouteKey = string.Empty;
 

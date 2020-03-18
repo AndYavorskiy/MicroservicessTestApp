@@ -5,6 +5,10 @@ using Newtonsoft.Json;
 using MedicalService.Models;
 using RabbitMQ.Client;
 using System;
+using Microsoft.Extensions.DependencyInjection;
+using FoodService.Repositories;
+using System.Threading.Tasks;
+using MedicalService.Entities;
 
 namespace MedicalService.Listeners
 {
@@ -24,11 +28,11 @@ namespace MedicalService.Listeners
             this.services = services;
 
             ExchangeName = "base.exchange.topic";
-            QueueName = "purchase";
+            QueueName = "purchase-medicaments";
             RouteKey = "purchase.medicaments.#";
         }
 
-        public override bool ProcessData(BasketItemModel message)
+        public override async Task<bool> ProcessData(BasketItemModel message)
         {
             // Returning to false directly rejects this message, indicating that it cannot be processed
             if (message == null)
@@ -38,15 +42,21 @@ namespace MedicalService.Listeners
 
             try
             {
-                var obj = JsonConvert.SerializeObject(message);
+                logger.LogInformation($"Processed successfully ({RouteKey}): { JsonConvert.SerializeObject(message)}");
 
-                logger.LogInformation($"Processed successfully (purchase.medicaments.#): {obj}");
+                using (var scope = services.CreateScope())
+                {
+                    var medicamentsRepository = scope.ServiceProvider.GetRequiredService<IMedicamentsRepository>();
 
-                //using (var scope = _services.CreateScope())
-                //{
-                //    var xxxService = scope.ServiceProvider.GetRequiredService<XXXXService>();
-                //    return true;
-                //}
+                    await medicamentsRepository.Create(new Medicaments()
+                    {
+                        Name = message.Name,
+                        Amount = message.Amount,
+                        Description = message.Description,
+                        UserId = message.UserId,
+                        ExpirationDate = message.ExpirationDate
+                    });
+                }
 
                 return true;
             }

@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using NotificationService.Models;
 using RabbitMQ.Client;
 using System;
+using System.Threading.Tasks;
 
 namespace NotificationService.Listeners
 {
@@ -28,19 +29,17 @@ namespace NotificationService.Listeners
             RouteKey = "notifications.basket.add.#";
         }
 
-        public override bool ProcessData(BasketItemModel message)
+        public override Task<bool> ProcessData(BasketItemModel message)
         {
             // Returning to false directly rejects this message, indicating that it cannot be processed
             if (message == null)
             {
-                return false;
+                return Task.FromResult(false);
             }
 
             try
             {
-                var obj = JsonConvert.SerializeObject(message);
-
-                logger.LogInformation($"Processed successfully: {obj}");
+                logger.LogInformation($"Processed successfully ({RouteKey}): { JsonConvert.SerializeObject(message)}");
 
                 //using (var scope = _services.CreateScope())
                 //{
@@ -48,13 +47,13 @@ namespace NotificationService.Listeners
                 //    return true;
                 //}
 
-                return true;
+                return Task.FromResult(true);
             }
             catch (Exception ex)
             {
-                logger.LogInformation($"Process fail,error:{ex.Message},stackTrace:{ex.StackTrace}");
+                logger.LogInformation($"Process fail, error:{ex.Message}, stackTrace:{ex.StackTrace}");
                 logger.LogError(-1, ex, "Process fail");
-                return false;
+                return Task.FromResult(false);
             }
         }
     }

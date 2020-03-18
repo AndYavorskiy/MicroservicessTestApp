@@ -1,10 +1,14 @@
-﻿using FoodService.Models;
+﻿using FoodService.Entities;
+using FoodService.Models;
+using FoodService.Repositories;
 using Infrastructure.RabbitMQ.Listeners;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.ObjectPool;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using System;
+using System.Threading.Tasks;
 
 namespace FoodService.Listeners
 {
@@ -24,11 +28,11 @@ namespace FoodService.Listeners
             this.services = services;
 
             ExchangeName = "base.exchange.topic";
-            QueueName = "purchase";
+            QueueName = "purchase-food";
             RouteKey = "purchase.food.#";
         }
 
-        public override bool ProcessData(BasketItemModel message)
+        public override async Task<bool> ProcessData(BasketItemModel message)
         {
             // Returning to false directly rejects this message, indicating that it cannot be processed
             if (message == null)
@@ -38,15 +42,21 @@ namespace FoodService.Listeners
 
             try
             {
-                var obj = JsonConvert.SerializeObject(message);
+                logger.LogInformation($"Processed successfully ({RouteKey}): { JsonConvert.SerializeObject(message)}");
 
-                logger.LogInformation($"Processed successfully (purchase.food.#): {obj}");
+                using (var scope = services.CreateScope())
+                {
+                    var foodRepository = scope.ServiceProvider.GetRequiredService<IFoodRepository>();
 
-                //using (var scope = _services.CreateScope())
-                //{
-                //    var xxxService = scope.ServiceProvider.GetRequiredService<XXXXService>();
-                //    return true;
-                //}
+                    await foodRepository.Create(new Food()
+                    {
+                        Name = message.Name,
+                        Amount = message.Amount,
+                        Description = message.Description,
+                        UserId = message.UserId,
+                        ExpirationDate = message.ExpirationDate
+                    });
+                }
 
                 return true;
             }

@@ -30,8 +30,8 @@ namespace MedicalService
             services.AddRabbit(Configuration);
 
             services.Configure<MongoDBConfig>(Configuration.GetSection("MongoDB"));
-            services.AddScoped<IHomeHelperDbContext, HomeHelperDbContext>();
-            services.AddScoped<IMedicamentsRepository, MedicamentsRepository>();
+            services.AddTransient<IHomeHelperDbContext, HomeHelperDbContext>();
+            services.AddTransient<IMedicamentsRepository, MedicamentsRepository>();
 
             services.AddHostedService<PurchaseMedicamentsListener>();
 

@@ -19,6 +19,8 @@ namespace BasketService.Entities
         public BasketItemType ItemType { get; set; }
 
         public DateTimeOffset DateCreated { get; set; }
+        
+        public DateTimeOffset? ExpirationDate { get; set; }
 
         public Guid UserId { get; set; }
 

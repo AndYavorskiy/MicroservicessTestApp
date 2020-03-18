@@ -30,8 +30,8 @@ namespace FoodService
             services.AddRabbit(Configuration);
 
             services.Configure<MongoDBConfig>(Configuration.GetSection("MongoDB"));
-            services.AddScoped<IHomeHelperDbContext, HomeHelperDbContext>();
-            services.AddScoped<IFoodRepository, FoodRepository>();
+            services.AddTransient<IHomeHelperDbContext, HomeHelperDbContext>();
+            services.AddTransient<IFoodRepository, FoodRepository>();
 
             services.AddHostedService<PurchaseFoodListener>();
 
