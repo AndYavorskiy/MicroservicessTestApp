@@ -10,9 +10,9 @@ namespace FoodService.Repositories
 
         Task<Food> Get(string id);
 
-        Task<Food> Create(Food module);
+        Task<Food> Create(Food food);
 
-        Task<bool> Update(Food module);
+        Task<bool> Update(Food food);
 
         Task<bool> Delete(string id);
     }

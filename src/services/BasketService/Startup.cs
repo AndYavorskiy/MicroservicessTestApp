@@ -1,3 +1,6 @@
+using BasketService.DBContext;
+using BasketService.Repositories;
+using Infrastructure.Models;
 using Infrastructure.RabbitMQ;
 using Infrastructure.ServiceDiscovery;
 using Microsoft.AspNetCore.Builder;
@@ -8,7 +11,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using ServiceStack.Redis;
 
-namespace ThirdService
+namespace BasketService
 {
     public class Startup
     {
@@ -19,12 +22,15 @@ namespace ThirdService
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             ConfigureConsul(services);
 
             services.AddRabbit(Configuration);
+
+            services.Configure<MongoDBConfig>(Configuration.GetSection("MongoDB"));
+            services.AddScoped<IHomeHelperDbContext, HomeHelperDbContext>();
+            services.AddScoped<IBasketItemRepository, BasketItemRepository>();
 
             services.AddControllers();
 
@@ -33,21 +39,11 @@ namespace ThirdService
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Version = "v1",
-                    Title = "Test Application - ThirdService HTTP API"
+                    Title = "Test Application - BasketService HTTP API"
                 });
             });
-
-            var redisConStr = Configuration.GetConnectionString("redis");
-
-            services.AddDistributedRedisCache(option =>
-            {
-                option.Configuration = redisConStr;
-            });
-
-            services.AddSingleton<IRedisClientsManager>(c => new RedisManagerPool("redis:6379"));
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -59,7 +55,7 @@ namespace ThirdService
 
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "ThirdService API V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "BasketService API V1");
             });
 
             app.UseHttpsRedirection();

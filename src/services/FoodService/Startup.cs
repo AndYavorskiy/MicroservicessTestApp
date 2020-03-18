@@ -9,6 +9,7 @@ using FoodService.DBContext;
 using FoodService.Models;
 using FoodService.Repositories;
 using Infrastructure.Models;
+using Infrastructure.RabbitMQ;
 
 namespace FoodService
 {
@@ -26,9 +27,10 @@ namespace FoodService
         {
             ConfigureConsul(services);
 
+            services.AddRabbit(Configuration);
+
             services.Configure<MongoDBConfig>(Configuration.GetSection("MongoDB"));
             services.AddScoped<IHomeHelperDbContext, HomeHelperDbContext>();
-
             services.AddScoped<IFoodRepository, FoodRepository>();
 
             services.AddControllers();

@@ -1,55 +1,53 @@
-﻿using MongoDB.Bson;
+﻿using BasketService.DBContext;
+using BasketService.Entities;
 using MongoDB.Driver;
-using FoodService.DBContext;
-using FoodService.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using FoodService.Entities;
 
-namespace FoodService.Repositories
+namespace BasketService.Repositories
 {
-    public class FoodRepository : IFoodRepository
+    public class BasketItemRepository : IBasketItemRepository
     {
         private readonly IHomeHelperDbContext _context;
 
-        public FoodRepository(IHomeHelperDbContext context)
+        public BasketItemRepository(IHomeHelperDbContext context)
         {
             _context = context;
         }
 
-        public Task<List<Food>> GetAll()
+        public Task<List<BasketItem>> GetAll()
         {
             return _context
-                .Food
+                .BasketItems
                 .Find(x => true)
                 .SortBy(x => x.Name)
                 .ToListAsync();
         }
 
 
-        public Task<Food> Get(string id)
+        public Task<BasketItem> Get(string id)
         {
             return _context
-                    .Food
+                    .BasketItems
                     .Find(s => s.Id == id)
                     .FirstOrDefaultAsync();
         }
 
-        public async Task<Food> Create(Food food)
+        public async Task<BasketItem> Create(BasketItem basketItem)
         {
-            await _context.Food.InsertOneAsync(food);
+            await _context.BasketItems.InsertOneAsync(basketItem);
 
-            return food;
+            return basketItem;
         }
 
-        public async Task<bool> Update(Food food)
+        public async Task<bool> Update(BasketItem basketItem)
         {
             var updateResult =
                 await _context
-                    .Food
+                    .BasketItems
                     .ReplaceOneAsync(
-                        filter: g => g.Id == food.Id,
-                        replacement: food);
+                        filter: g => g.Id == basketItem.Id,
+                        replacement: basketItem);
 
             return updateResult.IsAcknowledged
                     && updateResult.ModifiedCount > 0;
@@ -58,8 +56,8 @@ namespace FoodService.Repositories
         public async Task<bool> Delete(string id)
         {
             var deleteResult = await _context
-                .Food
-                .DeleteOneAsync(x=>x.Id == id);
+                .BasketItems
+                .DeleteOneAsync(x => x.Id == id);
 
             return deleteResult.IsAcknowledged
                 && deleteResult.DeletedCount > 0;

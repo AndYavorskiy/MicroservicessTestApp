@@ -35,7 +35,7 @@ namespace NotificationService
 
             services.AddControllers();
 
-            services.AddHostedService<NotificationListener>();
+            services.AddHostedService<BasketAddItemListener>();
 
             // Add functionality to inject IOptions<T>
             services.AddOptions();
@@ -45,7 +45,7 @@ namespace NotificationService
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Version = "v1",
-                    Title = "Test Application - Notification Service HTTP API",
+                    Title = "Notification Service HTTP API",
                 });
             });
         }

@@ -82,14 +82,15 @@ services:
     ports:
       - "54150:80"
 
-  thirdservice:
+  basketservice:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
       - ServiceConfig__serviceDiscoveryAddress=http://consul:8500
-      - ServiceConfig__serviceAddress=http://thirdservice:80
-      - ServiceConfig__serviceName=thirdservice
-      - ServiceConfig__serviceId=thirdservice-v1
+      - ServiceConfig__serviceAddress=http://basketservice:80
+      - ServiceConfig__serviceName=basketservice
+      - ServiceConfig__serviceId=basketservice-v1
+      - MongoDB__Host=mongo
     ports:
       - "54160:80"
 

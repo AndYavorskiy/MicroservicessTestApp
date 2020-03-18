@@ -1,7 +1,9 @@
 using FoodService.Repositories;
 using Infrastructure.Models;
+using Infrastructure.RabbitMQ;
 using Infrastructure.ServiceDiscovery;
 using MedicalService.DBContext;
+using MedicalService.Listeners;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -24,11 +26,14 @@ namespace MedicalService
         public void ConfigureServices(IServiceCollection services)
         {
             ConfigureConsul(services);
+            
+            services.AddRabbit(Configuration);
 
             services.Configure<MongoDBConfig>(Configuration.GetSection("MongoDB"));
             services.AddScoped<IHomeHelperDbContext, HomeHelperDbContext>();
-
             services.AddScoped<IMedicamentsRepository, MedicamentsRepository>();
+
+            services.AddHostedService<PurchaseMedicamentsListener>();
 
             services.AddControllers();
 

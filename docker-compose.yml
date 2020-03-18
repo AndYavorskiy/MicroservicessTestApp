@@ -48,6 +48,7 @@ services:
     container_name: medicalservice
     depends_on:
       - mongo
+      - rabbitmq
 
   foodservice:
     image: foodservice:latest
@@ -57,15 +58,16 @@ services:
     container_name: foodservice
     depends_on:
       - mongo
+      - rabbitmq
 
-  thirdservice:
-    image: thirdservice:latest
+  basketservice:
+    image: basketservice:latest
     build:
       context: .
-      dockerfile: src/services/ThirdService/Dockerfile
-    container_name: thirdservice
+      dockerfile: src/services/BasketService/Dockerfile
+    container_name: basketservice
     depends_on:
-      - redis
+      - mongo
       - rabbitmq
 
   notificationservice:

@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "src\commo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FoodService", "src\services\FoodService\FoodService.csproj", "{A759FDD0-0E63-4D3D-AA50-CCB994743779}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThirdService", "src\services\ThirdService\ThirdService.csproj", "{D0920F47-FB30-4295-9562-39EE2B6CE73D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BasketService", "src\services\BasketService\BasketService.csproj", "{D0920F47-FB30-4295-9562-39EE2B6CE73D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NotificationService", "src\services\NotificationService\NotificationService.csproj", "{18F4E436-DB88-4091-A2F0-5E504961B864}"
 EndProject

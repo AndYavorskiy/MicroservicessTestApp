@@ -2,32 +2,33 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.ObjectPool;
 using Newtonsoft.Json;
+using NotificationService.Models;
 using RabbitMQ.Client;
 using System;
 
 namespace NotificationService.Listeners
 {
-    public class NotificationListener : RabbitBaseListener<Notification>
+    public class BasketAddItemListener : RabbitBaseListener<BasketItemModel>
     {
-        private readonly ILogger<RabbitBaseListener<Notification>> _logger;
+        private readonly ILogger<RabbitBaseListener<BasketItemModel>> logger;
 
         // Because the Process function is a delegate callback, if you inject other services directly, they are not in one scope.
         // To invoke other Service instances, you can only use IServiceProvider CreateScope to retrieve instance objects
-        private readonly IServiceProvider _services;
+        private readonly IServiceProvider services;
 
-        public NotificationListener(IServiceProvider services,
+        public BasketAddItemListener(IServiceProvider services,
                             IPooledObjectPolicy<IModel> pooledObjectPolicy,
-                            ILogger<RabbitBaseListener<Notification>> logger) : base(pooledObjectPolicy)
+                            ILogger<RabbitBaseListener<BasketItemModel>> logger) : base(pooledObjectPolicy)
         {
-            _logger = logger;
-            _services = services;
+            this.logger = logger;
+            this.services = services;
 
             ExchangeName = "base.exchange.topic";
             QueueName = "notifications";
-            RouteKey = "notifications.create.#";
+            RouteKey = "notifications.basket.add.#";
         }
 
-        public override bool ProcessData(Notification message)
+        public override bool ProcessData(BasketItemModel message)
         {
             // Returning to false directly rejects this message, indicating that it cannot be processed
             if (message == null)
@@ -39,7 +40,7 @@ namespace NotificationService.Listeners
             {
                 var obj = JsonConvert.SerializeObject(message);
 
-                _logger.LogInformation($"Processed successfully: {obj}");
+                logger.LogInformation($"Processed successfully: {obj}");
 
                 //using (var scope = _services.CreateScope())
                 //{
@@ -51,8 +52,8 @@ namespace NotificationService.Listeners
             }
             catch (Exception ex)
             {
-                _logger.LogInformation($"Process fail,error:{ex.Message},stackTrace:{ex.StackTrace}");
-                _logger.LogError(-1, ex, "Process fail");
+                logger.LogInformation($"Process fail,error:{ex.Message},stackTrace:{ex.StackTrace}");
+                logger.LogError(-1, ex, "Process fail");
                 return false;
             }
         }

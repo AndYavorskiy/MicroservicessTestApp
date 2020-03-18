@@ -17,8 +17,8 @@
         {
             "DownstreamPathTemplate": "/api/{everything}",
             "DownstreamScheme": "http",
-            "ServiceName": "thirdservice",
-            "UpstreamPathTemplate": "/api/thirdservice/{everything}",
+            "ServiceName": "basketservice",
+            "UpstreamPathTemplate": "/api/basketservice/{everything}",
             "UpstreamHttpMethod": [ "Get" ]
         },
         {
