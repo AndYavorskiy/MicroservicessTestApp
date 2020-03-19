@@ -1,53 +1,54 @@
-﻿using MedicalService.DBContext;
-using MedicalService.Entities;
+﻿using UserService.DBContext;
+using UserService.Entities;
 using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace MedicalService.Repositories
+namespace UserService.Repositories
 {
-    public class MedicamentsRepository : IMedicamentsRepository
+    public class UserRepository : IUserRepository
     {
         private readonly IHomeHelperDbContext _context;
 
-        public MedicamentsRepository(IHomeHelperDbContext context)
+        public UserRepository(IHomeHelperDbContext context)
         {
             _context = context;
         }
 
-        public Task<List<Medicaments>> GetAll()
+        public Task<List<User>> GetAll()
         {
             return _context
-                .Medicaments
+                .Users
                 .Find(x => true)
-                .SortBy(x => x.Name)
+                .SortBy(x => x.FirstName)
+                .ThenBy(x => x.LastName)
                 .ToListAsync();
         }
 
 
-        public Task<Medicaments> Get(string id)
+        public Task<User> Get(string id)
         {
             return _context
-                    .Medicaments
+                    .Users
                     .Find(s => s.Id == id)
                     .FirstOrDefaultAsync();
         }
 
-        public async Task<Medicaments> Create(Medicaments medicaments)
+        public async Task<User> Create(User user)
         {
-            await _context.Medicaments.InsertOneAsync(medicaments);
+            await _context.Users.InsertOneAsync(user);
 
-            return medicaments;
+            return user;
         }
 
-        public async Task<bool> Update(Medicaments medicaments)
+        public async Task<bool> Update(User user)
         {
             var updateResult =
                 await _context
-                    .Medicaments
+                    .Users
                     .ReplaceOneAsync(
-                        filter: g => g.Id == medicaments.Id,
-                        replacement: medicaments);
+                        filter: g => g.Id == user.Id,
+                        replacement: user);
 
             return updateResult.IsAcknowledged
                     && updateResult.ModifiedCount > 0;
@@ -56,7 +57,7 @@ namespace MedicalService.Repositories
         public async Task<bool> Delete(string id)
         {
             var deleteResult = await _context
-                .Medicaments
+                .Users
                 .DeleteOneAsync(x => x.Id == id);
 
             return deleteResult.IsAcknowledged

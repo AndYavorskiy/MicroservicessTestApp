@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace FoodService.Repositories
+namespace MedicalService.Repositories
 {
     public interface IMedicamentsRepository
     {

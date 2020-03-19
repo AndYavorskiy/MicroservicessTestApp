@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Infrastructure.Models;
 using Infrastructure.ServiceDiscovery;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -12,6 +13,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using UserService.DBContext;
+using UserService.Repositories;
 
 namespace UserService
 {
@@ -28,6 +31,10 @@ namespace UserService
         public void ConfigureServices(IServiceCollection services)
         {
             ConfigureConsul(services);
+
+            services.Configure<MongoDBConfig>(Configuration.GetSection("MongoDB"));
+            services.AddTransient<IHomeHelperDbContext, HomeHelperDbContext>();
+            services.AddTransient<IUserRepository, UserRepository>();
 
             services.AddControllers();
 

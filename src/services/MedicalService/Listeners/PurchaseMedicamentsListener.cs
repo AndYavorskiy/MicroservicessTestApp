@@ -6,9 +6,9 @@ using MedicalService.Models;
 using RabbitMQ.Client;
 using System;
 using Microsoft.Extensions.DependencyInjection;
-using FoodService.Repositories;
 using System.Threading.Tasks;
 using MedicalService.Entities;
+using MedicalService.Repositories;
 
 namespace MedicalService.Listeners
 {

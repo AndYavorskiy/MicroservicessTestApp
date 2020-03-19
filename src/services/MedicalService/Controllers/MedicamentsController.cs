@@ -1,6 +1,6 @@
-﻿using FoodService.Repositories;
-using MedicalService.Entities;
+﻿using MedicalService.Entities;
 using MedicalService.Models;
+using MedicalService.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
