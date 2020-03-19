@@ -1,16 +1,19 @@
-using BasketService.DBContext;
-using BasketService.Repositories;
-using Infrastructure.Models;
-using Infrastructure.RabbitMQ;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Infrastructure.ServiceDiscovery;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
-namespace BasketService
+namespace UserService
 {
     public class Startup
     {
@@ -21,15 +24,10 @@ namespace BasketService
 
         public IConfiguration Configuration { get; }
 
+        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             ConfigureConsul(services);
-
-            services.AddRabbit(Configuration);
-
-            services.Configure<MongoDBConfig>(Configuration.GetSection("MongoDB"));
-            services.AddTransient<IHomeHelperDbContext, HomeHelperDbContext>();
-            services.AddTransient<IBasketItemRepository, BasketItemRepository>();
 
             services.AddControllers();
 
@@ -38,11 +36,12 @@ namespace BasketService
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Version = "v1",
-                    Title = "Basket Service HTTP API"
+                    Title = "User Service HTTP API"
                 });
             });
         }
 
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -54,7 +53,7 @@ namespace BasketService
 
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Basket Service API V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "User Service API V1");
             });
 
             app.UseHttpsRedirection();

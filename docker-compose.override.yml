@@ -106,6 +106,18 @@ services:
     ports:
       - "54170:80"
 
+  userservice:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ServiceConfig__serviceDiscoveryAddress=http://consul:8500
+      - ServiceConfig__serviceAddress=http://userservice:80
+      - ServiceConfig__serviceName=userservice
+      - ServiceConfig__serviceId=userservice-v1
+      - MongoDB__Host=mongo
+    ports:
+      - "54180:80"
+
 volumes:
     mongodb_data_volume:
       external: true

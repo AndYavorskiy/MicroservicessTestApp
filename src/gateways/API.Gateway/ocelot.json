@@ -1,4 +1,11 @@
 {
+    "GlobalConfiguration": {
+        "ServiceDiscoveryProvider": {
+            "Host": "consul",
+            "Port": 8500,
+            "Type": "Consul"
+        }
+    },
     "ReRoutes": [
         {
             "DownstreamPathTemplate": "/api/{everything}",
@@ -27,13 +34,13 @@
             "ServiceName": "notificationservice",
             "UpstreamPathTemplate": "/api/notificationservice/{everything}",
             "UpstreamHttpMethod": [ "Get" ]
+        },
+        {
+            "DownstreamPathTemplate": "/api/{everything}",
+            "DownstreamScheme": "http",
+            "ServiceName": "userservice",
+            "UpstreamPathTemplate": "/api/userservice/{everything}",
+            "UpstreamHttpMethod": [ "Get" ]
         }
-    ],
-    "GlobalConfiguration": {
-        "ServiceDiscoveryProvider": {
-            "Host": "consul",
-            "Port": 8500,
-            "Type": "Consul"
-        }
-    }
+    ]
 }

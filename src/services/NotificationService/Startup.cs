@@ -62,7 +62,7 @@ namespace NotificationService
 
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Notification API V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Notification Service API V1");
             });
 
             app.UseHttpsRedirection();

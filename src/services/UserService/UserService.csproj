@@ -1,10 +1,10 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <UserSecretsId>8a4d3fd9-f3ab-4059-87d9-766fff693ca9</UserSecretsId>
+    <UserSecretsId>30a75980-46bf-43ad-b7d3-de449b941c93</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    <DockerfileContext>..\..\..</DockerfileContext>
+    <DockerfileContext>..\..\..\..</DockerfileContext>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,5 +20,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\common\Infrastructure\Infrastructure.csproj" />
   </ItemGroup>
+
 
 </Project>

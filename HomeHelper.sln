@@ -23,6 +23,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BasketService", "src\servic
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NotificationService", "src\services\NotificationService\NotificationService.csproj", "{18F4E436-DB88-4091-A2F0-5E504961B864}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserService", "src\services\UserService\UserService.csproj", "{AB3EE3E1-B870-441A-A66C-E501F7C448D5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +59,10 @@ Global
 		{18F4E436-DB88-4091-A2F0-5E504961B864}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{18F4E436-DB88-4091-A2F0-5E504961B864}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{18F4E436-DB88-4091-A2F0-5E504961B864}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB3EE3E1-B870-441A-A66C-E501F7C448D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB3EE3E1-B870-441A-A66C-E501F7C448D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB3EE3E1-B870-441A-A66C-E501F7C448D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB3EE3E1-B870-441A-A66C-E501F7C448D5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -68,6 +74,7 @@ Global
 		{A759FDD0-0E63-4D3D-AA50-CCB994743779} = {CF1C0F47-FB55-437F-8242-BE248173F32B}
 		{D0920F47-FB30-4295-9562-39EE2B6CE73D} = {CF1C0F47-FB55-437F-8242-BE248173F32B}
 		{18F4E436-DB88-4091-A2F0-5E504961B864} = {CF1C0F47-FB55-437F-8242-BE248173F32B}
+		{AB3EE3E1-B870-441A-A66C-E501F7C448D5} = {CF1C0F47-FB55-437F-8242-BE248173F32B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F47055CF-47B4-46B8-BB75-21F3337882E6}

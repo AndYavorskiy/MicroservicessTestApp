@@ -79,3 +79,13 @@ services:
     depends_on:
       - mongo
       - rabbitmq
+
+  userservice:
+    image: userservice:latest
+    build:
+      context: .
+      dockerfile: src/services/UserService/Dockerfile
+    container_name: userservice
+    depends_on:
+      - mongo
+      - rabbitmq
