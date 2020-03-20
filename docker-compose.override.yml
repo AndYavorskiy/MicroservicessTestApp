@@ -119,6 +119,18 @@ services:
     ports:
       - "54180:80"
 
+  authorizationservice:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ServiceConfig__serviceDiscoveryAddress=http://consul:8500
+      - ServiceConfig__serviceAddress=http://authorizationservice:80
+      - ServiceConfig__serviceName=authorizationservice
+      - ServiceConfig__serviceId=authorizationservice-v1
+      - MongoDB__Host=mongo
+    ports:
+      - "54190:80"
+
 volumes:
     mongodb_data_volume:
       external: true

@@ -1,3 +1,7 @@
+using AuthorizationService.DBContext;
+using AuthorizationService.Listeners;
+using AuthorizationService.Models;
+using AuthorizationService.Repositories;
 using Infrastructure.Extensions;
 using Infrastructure.Models;
 using Infrastructure.RabbitMQ;
@@ -7,21 +11,18 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using UserService.DBContext;
-using UserService.Repositories;
 
-namespace UserService
+namespace AuthorizationService
 {
     public class Startup
     {
+        public IConfiguration Configuration { get; }
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.ConfigureConsul(Configuration);
@@ -33,6 +34,12 @@ namespace UserService
             services.AddTransient<IHomeHelperDbContext, HomeHelperDbContext>();
             services.AddTransient<IUserRepository, UserRepository>();
 
+            services.AddHostedService<UserCredentialsChangeListener>();
+
+            var authorizationConfigs = new AuthorizationConfigs();
+            Configuration.Bind("Authorization", authorizationConfigs);
+            services.AddSingleton(authorizationConfigs);
+
             services.AddControllers();
 
             services.AddSwaggerGen(c =>
@@ -40,12 +47,11 @@ namespace UserService
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Version = "v1",
-                    Title = "User Service HTTP API"
+                    Title = "Authorization Service HTTP API"
                 });
             });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -57,7 +63,7 @@ namespace UserService
 
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "User Service API V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Authorization Service API V1");
             });
 
             app.UseHttpsRedirection();

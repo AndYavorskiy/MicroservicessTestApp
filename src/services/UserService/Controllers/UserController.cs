@@ -1,5 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Infrastructure.RabbitMQ;
+using Infrastructure.Utilities;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using RabbitMQ.Client;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,6 +13,7 @@ using UserService.Repositories;
 
 namespace UserService.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class UserController : ControllerBase
@@ -16,12 +21,14 @@ namespace UserService.Controllers
         private const int PasswordMinLength = 8;
 
         private readonly ILogger<UserController> logger;
+        private readonly IRabbitManager manager;
         private readonly IUserRepository userRepository;
 
-        public UserController(IUserRepository medicamentsRepository, ILogger<UserController> logger)
+        public UserController(IUserRepository medicamentsRepository, ILogger<UserController> logger, IRabbitManager manager)
         {
             this.userRepository = medicamentsRepository;
             this.logger = logger;
+            this.manager = manager;
         }
 
         [HttpGet]
@@ -45,25 +52,29 @@ namespace UserService.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<ActionResult<UserDetailsModel>> Create(UserCreateModel createModel)
         {
-            if (string.IsNullOrEmpty(createModel.Password) || createModel.Password.Length < PasswordMinLength)
+            if (string.IsNullOrEmpty(createModel.Email) || string.IsNullOrEmpty(createModel.Password) || createModel.Password.Length < PasswordMinLength)
             {
                 return new BadRequestResult();
             }
 
-            var user = new User
+            var user = await userRepository.Create(new User
             {
                 FirstName = createModel.FirstName,
                 LastName = createModel.LastName,
                 Email = createModel.Email,
-                Password = createModel.Password,
+                Password = SecurePasswordHasher.Hash(createModel.Password),
                 Birthday = createModel.Birthday
-            };
+            });
 
-            await userRepository.Create(user);
-
-            //TODO: notify another services (Authorization)
+            manager.Publish(
+               message: user,
+               exchangeName: "base.exchange.topic",
+               exchangeType: ExchangeType.Topic,
+               routeKey: "user.create"
+             );
 
             return new ObjectResult(MapToModel(user));
         }
@@ -84,7 +95,12 @@ namespace UserService.Controllers
 
             await userRepository.Update(user);
 
-            //TODO: notify another services (Authorization)
+            manager.Publish(
+              message: user,
+              exchangeName: "base.exchange.topic",
+              exchangeType: ExchangeType.Topic,
+              routeKey: "user.update.info"
+            );
 
             return new ObjectResult(MapToModel(user));
         }
@@ -102,7 +118,12 @@ namespace UserService.Controllers
 
             await userRepository.Update(user);
 
-            //TODO: notify another services (Authorization)
+            manager.Publish(
+               message: user,
+               exchangeName: "base.exchange.topic",
+               exchangeType: ExchangeType.Topic,
+               routeKey: "user.update.status"
+             );
 
             return Ok();
         }
@@ -116,16 +137,21 @@ namespace UserService.Controllers
                 return new NotFoundResult();
             }
 
-            if (user.Password != passwordModel.OldPassword || string.IsNullOrEmpty(passwordModel.NewPassword) || passwordModel.NewPassword.Length < PasswordMinLength)
+            if (!SecurePasswordHasher.Verify(passwordModel.OldPassword, user.Password) || string.IsNullOrEmpty(passwordModel.NewPassword) || passwordModel.NewPassword.Length < PasswordMinLength)
             {
                 return new BadRequestResult();
             }
 
-            user.Password = passwordModel.NewPassword;
+            user.Password = SecurePasswordHasher.Hash(passwordModel.NewPassword);
 
             await userRepository.Update(user);
 
-            //TODO: notify another services (Authorization)
+            manager.Publish(
+               message: user,
+               exchangeName: "base.exchange.topic",
+               exchangeType: ExchangeType.Topic,
+               routeKey: "user.update.password"
+             );
 
             return Ok();
         }

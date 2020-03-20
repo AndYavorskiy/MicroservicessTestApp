@@ -2,16 +2,16 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <UserSecretsId>30a75980-46bf-43ad-b7d3-de449b941c93</UserSecretsId>
+    <UserSecretsId>236fcfed-aa11-4bfc-85ee-bae2eace0f37</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    <DockerfileContext>..\..\..\..</DockerfileContext>
+    <DockerfileContext>..\..\..</DockerfileContext>
+    <DockerComposeProjectPath>..\..\..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.9.10" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.8" />
     <PackageReference Include="MongoDB.Driver" Version="2.10.2" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.1.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="5.1.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="5.1.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="5.1.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="5.1.0" />
@@ -20,6 +20,5 @@
   <ItemGroup>
     <ProjectReference Include="..\..\common\Infrastructure\Infrastructure.csproj" />
   </ItemGroup>
-
 
 </Project>

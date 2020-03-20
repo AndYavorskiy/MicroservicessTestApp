@@ -1,6 +1,7 @@
 ﻿using MedicalService.Entities;
 using MedicalService.Models;
 using MedicalService.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace MedicalService.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class MedicamentsController : ControllerBase

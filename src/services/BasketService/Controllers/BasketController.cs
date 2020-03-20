@@ -2,6 +2,7 @@
 using BasketService.Models;
 using BasketService.Repositories;
 using Infrastructure.RabbitMQ;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
@@ -12,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace BasketService.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class BasketController : ControllerBase

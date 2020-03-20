@@ -1,6 +1,7 @@
 ﻿using FoodService.Entities;
 using FoodService.Models;
 using FoodService.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -9,8 +10,9 @@ using System.Threading.Tasks;
 
 namespace FoodService.Controllers
 {
-    [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
+    [Route("api/[controller]")]
     public class FoodController : ControllerBase
     {
         private readonly IFoodRepository foodRepository;

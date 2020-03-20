@@ -11,9 +11,8 @@ namespace Infrastructure.Extensions
         public static void ConfigureAuthorization(this IServiceCollection services, IConfiguration configuration)
         {
             // prevent from mapping "sub" claim to nameidentifier.
-            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("sub");
+            //JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("sub");
 
-            var authenticationScheme = "IdentityApiKey";
             var identityUrl = configuration.GetValue<string>("IdentityUrl");
             var audience = configuration.GetValue<string>("Audience");
 
@@ -22,12 +21,12 @@ namespace Infrastructure.Extensions
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 
-            }).AddJwtBearer(authenticationScheme, options =>
-            {
-                options.Authority = identityUrl;
-                options.RequireHttpsMetadata = false;
-                options.Audience = audience;
-            });
+            }).AddJwtBearer(options =>
+           {
+               options.Authority = identityUrl;
+               options.RequireHttpsMetadata = false;
+               options.Audience = audience;
+           });
         }
 
         public static void ConfigureConsul(this IServiceCollection services, IConfiguration configuration)
