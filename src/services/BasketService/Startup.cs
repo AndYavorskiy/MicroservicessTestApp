@@ -1,14 +1,17 @@
 using BasketService.DBContext;
 using BasketService.Repositories;
+using Infrastructure.Extensions;
 using Infrastructure.Models;
 using Infrastructure.RabbitMQ;
 using Infrastructure.ServiceDiscovery;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace BasketService
 {
@@ -23,7 +26,8 @@ namespace BasketService
 
         public void ConfigureServices(IServiceCollection services)
         {
-            ConfigureConsul(services);
+            services.ConfigureConsul(Configuration);
+            services.ConfigureAuthorization(Configuration);
 
             services.AddRabbit(Configuration);
 
@@ -67,13 +71,6 @@ namespace BasketService
             {
                 endpoints.MapControllers();
             });
-        }
-
-        private void ConfigureConsul(IServiceCollection services)
-        {
-            var serviceConfig = Configuration.GetServiceConfig();
-
-            services.RegisterConsulServices(serviceConfig);
         }
     }
 }

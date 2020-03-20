@@ -12,35 +12,61 @@
             "DownstreamScheme": "http",
             "ServiceName": "medicalservice",
             "UpstreamPathTemplate": "/api/medicalservice/{everything}",
-            "UpstreamHttpMethod": [ "Get" ]
+            "UpstreamHttpMethod": [ "Get" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "IdentityApiKey",
+                "AllowedScopes": []
+            }
         },
         {
             "DownstreamPathTemplate": "/api/{everything}",
             "DownstreamScheme": "http",
             "ServiceName": "foodservice",
             "UpstreamPathTemplate": "/api/foodservice/{everything}",
-            "UpstreamHttpMethod": [ "Get" ]
+            "UpstreamHttpMethod": [ "Get" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "IdentityApiKey",
+                "AllowedScopes": []
+            }
         },
         {
             "DownstreamPathTemplate": "/api/{everything}",
             "DownstreamScheme": "http",
             "ServiceName": "basketservice",
             "UpstreamPathTemplate": "/api/basketservice/{everything}",
-            "UpstreamHttpMethod": [ "Get" ]
+            "UpstreamHttpMethod": [ "Get" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "IdentityApiKey",
+                "AllowedScopes": []
+            }
         },
         {
             "DownstreamPathTemplate": "/api/{everything}",
             "DownstreamScheme": "http",
             "ServiceName": "notificationservice",
             "UpstreamPathTemplate": "/api/notificationservice/{everything}",
-            "UpstreamHttpMethod": [ "Get" ]
+            "UpstreamHttpMethod": [ "Get" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "IdentityApiKey",
+                "AllowedScopes": []
+            }
         },
         {
             "DownstreamPathTemplate": "/api/{everything}",
             "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 54180
+                }
+            ],
             "ServiceName": "userservice",
             "UpstreamPathTemplate": "/api/userservice/{everything}",
-            "UpstreamHttpMethod": [ "Get" ]
+            "UpstreamHttpMethod": [ "Get" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "IdentityApiKey",
+                "AllowedScopes": []
+            }
         }
     ]
 }

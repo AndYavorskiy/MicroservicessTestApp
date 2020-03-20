@@ -5,6 +5,7 @@ services:
   api.gateway:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - IdentityUrl=http://localhost:54140
     ports:
       - "4200:80"
 

@@ -1,9 +1,9 @@
 using FoodService.DBContext;
 using FoodService.Listeners;
 using FoodService.Repositories;
+using Infrastructure.Extensions;
 using Infrastructure.Models;
 using Infrastructure.RabbitMQ;
-using Infrastructure.ServiceDiscovery;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -25,7 +25,8 @@ namespace FoodService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            ConfigureConsul(services);
+            services.ConfigureConsul(Configuration);
+            services.ConfigureAuthorization(Configuration);
 
             services.AddRabbit(Configuration);
 
@@ -72,13 +73,6 @@ namespace FoodService
             {
                 endpoints.MapControllers();
             });
-        }
-
-        private void ConfigureConsul(IServiceCollection services)
-        {
-            var serviceConfig = Configuration.GetServiceConfig();
-
-            services.RegisterConsulServices(serviceConfig);
         }
     }
 }

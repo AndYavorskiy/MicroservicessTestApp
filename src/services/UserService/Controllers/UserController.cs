@@ -63,7 +63,7 @@ namespace UserService.Controllers
 
             await userRepository.Create(user);
 
-            //TODO: notify another services
+            //TODO: notify another services (Authorization)
 
             return new ObjectResult(MapToModel(user));
         }
@@ -84,7 +84,7 @@ namespace UserService.Controllers
 
             await userRepository.Update(user);
 
-            //TODO: notify another services
+            //TODO: notify another services (Authorization)
 
             return new ObjectResult(MapToModel(user));
         }
@@ -101,6 +101,8 @@ namespace UserService.Controllers
             user.IsActive = isActive;
 
             await userRepository.Update(user);
+
+            //TODO: notify another services (Authorization)
 
             return Ok();
         }
