@@ -3,14 +3,17 @@ using AuthorizationService.Listeners;
 using AuthorizationService.Models;
 using AuthorizationService.Repositories;
 using Infrastructure.Extensions;
+using Infrastructure.Middlewares;
 using Infrastructure.Models;
 using Infrastructure.RabbitMQ;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace AuthorizationService
 {
@@ -27,6 +30,7 @@ namespace AuthorizationService
         {
             services.ConfigureConsul(Configuration);
             services.ConfigureAuthorization(Configuration);
+            services.ConfigureSwagger("Authorization Service HTTP API");
 
             services.AddRabbit(Configuration);
 
@@ -42,18 +46,35 @@ namespace AuthorizationService
 
             services.AddControllers();
 
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo
-                {
-                    Version = "v1",
-                    Title = "Authorization Service HTTP API"
-                });
-            });
+            // configure jwt authentication
+            //var identityUrl = Configuration.GetValue<string>("IdentityUrl");
+            //var audience = Configuration.GetValue<string>("Audience");
+
+            //var key = Encoding.ASCII.GetBytes(authorizationConfigs.TokenKey);
+
+            //services.AddAuthentication(x =>
+            //{
+            //    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            //    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            //})
+            //.AddJwtBearer(x =>
+            //{
+            //    x.RequireHttpsMetadata = false;
+            //    x.SaveToken = true;
+            //    x.TokenValidationParameters = new TokenValidationParameters
+            //    {
+            //        ValidateIssuerSigningKey = true,
+            //        IssuerSigningKey = new SymmetricSecurityKey(key),
+            //        ValidateIssuer = false,
+            //        ValidateAudience = false
+            //    };
+            //});
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseGlobalErrorHandling();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -66,10 +87,9 @@ namespace AuthorizationService
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Authorization Service API V1");
             });
 
-            app.UseHttpsRedirection();
-
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

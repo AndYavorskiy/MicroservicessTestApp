@@ -37,7 +37,7 @@ namespace AuthorizationService.Controllers
             this.authorizationConfigs = authorizationConfigs;
         }
 
-        [HttpPost]
+        [HttpPost("login")]
         [AllowAnonymous]
         public async Task<ActionResult<UserTokenModel>> Login(AuthModel credentials)
         {
@@ -55,7 +55,7 @@ namespace AuthorizationService.Controllers
             return Ok(GenerateToken(user));
         }
 
-        [HttpGet]
+        [HttpGet("refresh")]
         public async Task<ActionResult<UserTokenModel>> GetRefreshedToken()
         {
             var user = await userRepository.Get(User.GetLoggedInUserId());
@@ -68,6 +68,7 @@ namespace AuthorizationService.Controllers
         }
 
         [HttpGet("ping")]
+        [AllowAnonymous]
         public ActionResult Ping()
         {
             return Ok();
@@ -83,8 +84,8 @@ namespace AuthorizationService.Controllers
                 Subject = new ClaimsIdentity(
                     new[]
                     {
-                        new Claim(ClaimTypes.Email, user.Email),
                         new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                        new Claim(ClaimTypes.Email, user.Email),
                     }),
                 Expires = DateTime.UtcNow.AddMinutes(authorizationConfigs.TokenExpiratinInMinutes),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

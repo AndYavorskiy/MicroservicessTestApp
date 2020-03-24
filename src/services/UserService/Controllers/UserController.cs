@@ -32,6 +32,7 @@ namespace UserService.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<List<UserModel>>> Get()
         {
             return new ObjectResult((await userRepository.GetAll())

@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace API.Gateway
 {
@@ -20,20 +22,23 @@ namespace API.Gateway
             var authenticationScheme = "IdentityApiKey";
             var identityUrl = Configuration.GetValue<string>("IdentityUrl");
             var audiences = Configuration.GetSection("Audiences").Get<string[]>();
+            var tokenKey = Configuration.GetValue<string>("Authorization:TokenKey");
 
-            services.AddAuthentication(o =>
+            services.AddAuthentication()
+            .AddJwtBearer(authenticationScheme, options =>
+            {
+                options.SaveToken = true;
+                options.RequireHttpsMetadata = false;
+                options.Authority = identityUrl;
+                options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    o.DefaultAuthenticateScheme = authenticationScheme;
-                })
-                .AddJwtBearer(authenticationScheme, x =>
-                {
-                    x.Authority = identityUrl;
-                    x.RequireHttpsMetadata = false;
-                    x.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
-                    {
-                        ValidAudiences = audiences
-                    };
-                });
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(tokenKey)),
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ValidAudiences = audiences
+                };
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -43,9 +48,7 @@ namespace API.Gateway
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseAuthentication();
-
-            app.UseRouting();
+            app.UseAuthorization();
         }
     }
 }

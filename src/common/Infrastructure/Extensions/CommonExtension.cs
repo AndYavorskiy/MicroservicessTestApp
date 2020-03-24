@@ -2,7 +2,10 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using System.Collections.Generic;
+using System.Text;
 
 namespace Infrastructure.Extensions
 {
@@ -10,23 +13,28 @@ namespace Infrastructure.Extensions
     {
         public static void ConfigureAuthorization(this IServiceCollection services, IConfiguration configuration)
         {
-            // prevent from mapping "sub" claim to nameidentifier.
-            //JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("sub");
-
             var identityUrl = configuration.GetValue<string>("IdentityUrl");
             var audience = configuration.GetValue<string>("Audience");
+            var tokenKey = configuration.GetValue<string>("Authorization:TokenKey");
+            var key = Encoding.ASCII.GetBytes(tokenKey);
 
-            services.AddAuthentication(options =>
+            services.AddAuthentication(x =>
             {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-
-            }).AddJwtBearer(options =>
-           {
-               options.Authority = identityUrl;
-               options.RequireHttpsMetadata = false;
-               options.Audience = audience;
-           });
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+             .AddJwtBearer(x =>
+             {
+                 x.RequireHttpsMetadata = false;
+                 x.SaveToken = true;
+                 x.TokenValidationParameters = new TokenValidationParameters
+                 {
+                     ValidateIssuerSigningKey = true,
+                     IssuerSigningKey = new SymmetricSecurityKey(key),
+                     ValidateIssuer = false,
+                     ValidateAudience = false
+                 };
+             });
         }
 
         public static void ConfigureConsul(this IServiceCollection services, IConfiguration configuration)
@@ -34,6 +42,42 @@ namespace Infrastructure.Extensions
             var serviceConfig = configuration.GetServiceConfig();
 
             services.RegisterConsulServices(serviceConfig);
+        }
+
+        public static void ConfigureSwagger(this IServiceCollection services, string title)
+        {
+            services.AddSwaggerGen(c =>
+                {
+                    c.SwaggerDoc("v1", new OpenApiInfo
+                    {
+                        Version = "v1",
+                        Title = title,
+                    });
+
+                    c.AddSecurityDefinition("Bearer",
+                        new OpenApiSecurityScheme
+                        {
+                            In = ParameterLocation.Header,
+                            Description = "Please enter into field the word 'Bearer' following by space and JWT",
+                            Name = "Authorization",
+                            Type = SecuritySchemeType.ApiKey,
+                            Scheme = "IdentityApiKey",
+                        });
+
+                    var openApiSecurityScheme = new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Id = "Bearer",
+                            Type = ReferenceType.SecurityScheme,
+                        },
+                    };
+
+                    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                    {
+                        { openApiSecurityScheme, new List<string>() },
+                    });
+                });
         }
     }
 }

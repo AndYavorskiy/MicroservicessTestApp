@@ -27,6 +27,7 @@ namespace FoodService
         {
             services.ConfigureConsul(Configuration);
             services.ConfigureAuthorization(Configuration);
+            services.ConfigureSwagger("Food Service HTTP API");
 
             services.AddRabbit(Configuration);
 
@@ -37,15 +38,6 @@ namespace FoodService
             services.AddHostedService<PurchaseFoodListener>();
 
             services.AddControllers();
-
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo
-                {
-                    Version = "v1",
-                    Title = "Food Service HTTP API"
-                });
-            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

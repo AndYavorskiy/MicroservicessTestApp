@@ -56,22 +56,24 @@
             "DownstreamScheme": "http",
             "ServiceName": "userservice",
             "UpstreamPathTemplate": "/api/userservice/{everything}",
-            "UpstreamHttpMethod": [ "Get" ],
-            "AuthenticationOptions": {
-                "AuthenticationProviderKey": "IdentityApiKey",
-                "AllowedScopes": []
-            }
+            "UpstreamHttpMethod": [ "Get" ]
+            //,
+            //"AuthenticationOptions": {
+            //    "AuthenticationProviderKey": "IdentityApiKey",
+            //    "AllowedScopes": []
+            //}
         },
         {
             "DownstreamPathTemplate": "/api/{everything}",
             "DownstreamScheme": "http",
             "ServiceName": "authorizationservice",
             "UpstreamPathTemplate": "/api/authorizationservice/{everything}",
-            "UpstreamHttpMethod": [ "Get" ],
-            "AuthenticationOptions": {
-                "AuthenticationProviderKey": "IdentityApiKey",
-                "AllowedScopes": []
-            }
+            "UpstreamHttpMethod": [ "Get" ]
+            //,
+            //"AuthenticationOptions": {
+            //    "AuthenticationProviderKey": "IdentityApiKey",
+            //    "AllowedScopes": []
+            //}
         }
     ]
 }

@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
 
 namespace BasketService
 {
@@ -25,6 +24,7 @@ namespace BasketService
         {
             services.ConfigureConsul(Configuration);
             services.ConfigureAuthorization(Configuration);
+            services.ConfigureSwagger("Basket Service HTTP API");
 
             services.AddRabbit(Configuration);
 
@@ -33,15 +33,6 @@ namespace BasketService
             services.AddTransient<IBasketItemRepository, BasketItemRepository>();
 
             services.AddControllers();
-
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo
-                {
-                    Version = "v1",
-                    Title = "Basket Service HTTP API"
-                });
-            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

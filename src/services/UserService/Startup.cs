@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
 using UserService.DBContext;
 using UserService.Repositories;
 
@@ -21,11 +20,11 @@ namespace UserService
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.ConfigureConsul(Configuration);
             services.ConfigureAuthorization(Configuration);
+            services.ConfigureSwagger("User Service HTTP API");
 
             services.AddRabbit(Configuration);
 
@@ -34,18 +33,8 @@ namespace UserService
             services.AddTransient<IUserRepository, UserRepository>();
 
             services.AddControllers();
-
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo
-                {
-                    Version = "v1",
-                    Title = "User Service HTTP API"
-                });
-            });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -64,6 +53,7 @@ namespace UserService
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
