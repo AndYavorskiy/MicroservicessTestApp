@@ -45,30 +45,6 @@ namespace AuthorizationService
             services.AddSingleton(authorizationConfigs);
 
             services.AddControllers();
-
-            // configure jwt authentication
-            //var identityUrl = Configuration.GetValue<string>("IdentityUrl");
-            //var audience = Configuration.GetValue<string>("Audience");
-
-            //var key = Encoding.ASCII.GetBytes(authorizationConfigs.TokenKey);
-
-            //services.AddAuthentication(x =>
-            //{
-            //    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            //    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            //})
-            //.AddJwtBearer(x =>
-            //{
-            //    x.RequireHttpsMetadata = false;
-            //    x.SaveToken = true;
-            //    x.TokenValidationParameters = new TokenValidationParameters
-            //    {
-            //        ValidateIssuerSigningKey = true,
-            //        IssuerSigningKey = new SymmetricSecurityKey(key),
-            //        ValidateIssuer = false,
-            //        ValidateAudience = false
-            //    };
-            //});
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

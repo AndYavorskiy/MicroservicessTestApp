@@ -13,10 +13,9 @@ namespace Infrastructure.Extensions
     {
         public static void ConfigureAuthorization(this IServiceCollection services, IConfiguration configuration)
         {
-            var identityUrl = configuration.GetValue<string>("IdentityUrl");
+            var identityUrl = "http://localhost:54140";
+            var key = Encoding.ASCII.GetBytes("my-secure-token-key-that-is-very-secure");
             var audience = configuration.GetValue<string>("Audience");
-            var tokenKey = configuration.GetValue<string>("Authorization:TokenKey");
-            var key = Encoding.ASCII.GetBytes(tokenKey);
 
             services.AddAuthentication(x =>
             {
