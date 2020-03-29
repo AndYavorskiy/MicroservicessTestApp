@@ -1,4 +1,5 @@
-﻿using Infrastructure.RabbitMQ;
+﻿using Infrastructure.Extensions;
+using Infrastructure.RabbitMQ;
 using Infrastructure.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -42,13 +43,21 @@ namespace UserService.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<UserModel>> Get(string id)
         {
-            var food = await userRepository.Get(id);
-            if (food == null)
+            var user = await userRepository.Get(id);
+            if (user == null)
             {
                 return new NotFoundResult();
             }
 
-            return new ObjectResult(MapToModel(food));
+            return new ObjectResult(MapToModel(user));
+        }
+
+        [HttpGet("info")]
+        public async Task<ActionResult<UserModel>> GetInfo()
+        {
+            var user = await userRepository.Get(User.GetLoggedInUserId());
+
+            return new ObjectResult(MapToModel(user));
         }
 
         [HttpPost]

@@ -37,6 +37,7 @@ namespace AuthorizationService
             services.Configure<MongoDBConfig>(Configuration.GetSection("MongoDB"));
             services.AddTransient<IHomeHelperDbContext, HomeHelperDbContext>();
             services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IRefreshTokenRepository, RefreshTokenRepository>();
 
             services.AddHostedService<UserCredentialsChangeListener>();
 

@@ -1,11 +1,12 @@
 ﻿using Infrastructure.ServiceDiscovery;
+using Infrastructure.Utilities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Collections.Generic;
-using System.Text;
+using System.Threading.Tasks;
 
 namespace Infrastructure.Extensions
 {
@@ -14,7 +15,6 @@ namespace Infrastructure.Extensions
         public static void ConfigureAuthorization(this IServiceCollection services, IConfiguration configuration)
         {
             var identityUrl = "http://localhost:54140";
-            var key = Encoding.ASCII.GetBytes("my-secure-token-key-that-is-very-secure");
             var audience = configuration.GetValue<string>("Audience");
 
             services.AddAuthentication(x =>
@@ -26,12 +26,18 @@ namespace Infrastructure.Extensions
              {
                  x.RequireHttpsMetadata = false;
                  x.SaveToken = true;
-                 x.TokenValidationParameters = new TokenValidationParameters
+                 x.TokenValidationParameters = TokenValidator.GetTokenValidationParameters();
+                 x.Events = new JwtBearerEvents
                  {
-                     ValidateIssuerSigningKey = true,
-                     IssuerSigningKey = new SymmetricSecurityKey(key),
-                     ValidateIssuer = false,
-                     ValidateAudience = false
+                     OnAuthenticationFailed = context =>
+                     {
+                         if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
+                         {
+                             context.Response.Headers.Add("Token-Expired", "true");
+                         }
+
+                         return Task.CompletedTask;
+                     }
                  };
              });
         }

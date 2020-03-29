@@ -4,42 +4,43 @@ using AuthorizationService.Repositories;
 using Infrastructure.Extensions;
 using Infrastructure.RabbitMQ;
 using Infrastructure.Utilities;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace AuthorizationService.Controllers
 {
     [ApiController]
-    [Authorize]
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
         private readonly ILogger<AuthController> logger;
         private readonly IUserRepository userRepository;
         private readonly IRabbitManager manager;
+        private readonly IRefreshTokenRepository refreshTokenRepository;
         private readonly AuthorizationConfigs authorizationConfigs;
 
         public AuthController(ILogger<AuthController> logger,
             IUserRepository userRepository,
             IRabbitManager manager,
+            IRefreshTokenRepository refreshTokenRepository,
             AuthorizationConfigs authorizationConfigs)
         {
             this.logger = logger;
             this.userRepository = userRepository;
             this.manager = manager;
+            this.refreshTokenRepository = refreshTokenRepository;
             this.authorizationConfigs = authorizationConfigs;
         }
 
         [HttpPost("login")]
-        [AllowAnonymous]
-        public async Task<ActionResult<UserTokenModel>> Login(AuthModel credentials)
+        public async Task<ActionResult<AuthTokenModel>> Login(AuthModel credentials)
         {
             var user = await userRepository.GetByEmailAsync(credentials.Login);
             if (user == null)
@@ -52,29 +53,38 @@ namespace AuthorizationService.Controllers
                 return Unauthorized();
             }
 
-            return Ok(GenerateToken(user));
+            var token = await GenerateToken(user);
+
+            return Ok(token);
         }
 
-        [HttpGet("refresh")]
-        public async Task<ActionResult<UserTokenModel>> GetRefreshedToken()
+        [HttpPost("refresh")]
+        public async Task<ActionResult<AuthTokenModel>> Refresh(RefreshTokenModel refreshTokenModel)
         {
-            var user = await userRepository.Get(User.GetLoggedInUserId());
-            if (user == null)
+            var principal = GetPrincipalFromExpiredToken(refreshTokenModel.Token);
+            var userId = principal.GetLoggedInUserId(); ;
+
+            if (string.IsNullOrEmpty(userId))
             {
-                return Unauthorized();
+                throw new SecurityTokenException("Invalid refresh token");
             }
 
-            return Ok(GenerateToken(user));
+            var user = await userRepository.Get(userId);
+            var oldRefreshToken = await refreshTokenRepository.Get(userId, refreshTokenModel.RefreshToken);
+
+            if (user == null || oldRefreshToken == null)
+            {
+                throw new SecurityTokenException("Invalid refresh token");
+            }
+
+            await refreshTokenRepository.Delete(userId, oldRefreshToken.Id);
+
+            var newToken = await GenerateToken(user);
+
+            return Ok(newToken);
         }
 
-        [HttpGet("ping")]
-        [AllowAnonymous]
-        public ActionResult Ping()
-        {
-            return Ok();
-        }
-
-        private UserTokenModel GenerateToken(User user)
+        private async Task<AuthTokenModel> GenerateToken(User user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(authorizationConfigs.TokenKey);
@@ -92,12 +102,47 @@ namespace AuthorizationService.Controllers
             };
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
+            var refreshToken = GenerateRefreshToken();
 
-            return new UserTokenModel
+            await refreshTokenRepository.Create(new RefreshToken()
+            {
+                UserId = user.Id,
+                Token = refreshToken
+            });
+
+            return new AuthTokenModel
             {
                 Token = tokenHandler.WriteToken(token),
                 ExpiredIn = new DateTimeOffset(tokenDescriptor.Expires.Value).ToUnixTimeMilliseconds(),
+                RefreshToken = refreshToken
             };
+        }
+
+        private string GenerateRefreshToken()
+        {
+            var randomNumber = new byte[32];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(randomNumber);
+                return Convert.ToBase64String(randomNumber);
+            }
+        }
+
+        private ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
+        {
+            var tokenValidationParameters = TokenValidator.GetTokenValidationParameters();
+
+            //here we are saying that we don't care about the token's expiration date
+            tokenValidationParameters.ValidateLifetime = false;
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out SecurityToken securityToken);
+            var jwtSecurityToken = securityToken as JwtSecurityToken;
+
+            if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+                throw new SecurityTokenException("Invalid token");
+
+            return principal;
         }
     }
 }

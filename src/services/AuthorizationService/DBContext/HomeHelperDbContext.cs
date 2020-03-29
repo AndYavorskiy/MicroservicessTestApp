@@ -16,5 +16,7 @@ namespace AuthorizationService.DBContext
         }
 
         public IMongoCollection<User> Users => _db.GetCollection<User>("Users");
+
+        public IMongoCollection<RefreshToken> RefreshTokens => _db.GetCollection<RefreshToken>("RefreshTokens");
     }
 }
