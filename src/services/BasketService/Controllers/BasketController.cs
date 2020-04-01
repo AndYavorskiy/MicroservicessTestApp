@@ -61,7 +61,6 @@ namespace BasketService.Controllers
                 Name = basketItemModel.Name,
                 Amount = basketItemModel.Amount,
                 Description = basketItemModel.Description,
-                ExistinctEntityId = basketItemModel.ExistinctEntityId,
                 UserId = User.GetLoggedInUserId(),
                 DateCreated = basketItemModel.DateCreated,
                 ItemType = basketItemModel.ItemType
@@ -93,7 +92,6 @@ namespace BasketService.Controllers
             basketItem.Name = basketItemModel.Name;
             basketItem.Amount = basketItemModel.Amount;
             basketItem.Description = basketItemModel.Description;
-            basketItem.ExistinctEntityId = basketItemModel.ExistinctEntityId;
             basketItem.DateCreated = basketItemModel.DateCreated;
             basketItem.ItemType = basketItemModel.ItemType;
 
@@ -166,8 +164,7 @@ namespace BasketService.Controllers
             Description = food.Description,
             DateCreated = food.DateCreated,
             ItemType = food.ItemType,
-            UserId = food.UserId,
-            ExistinctEntityId = food.ExistinctEntityId
+            UserId = food.UserId
         };
     }
 }

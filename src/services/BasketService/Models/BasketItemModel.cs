@@ -20,7 +20,5 @@ namespace BasketService.Models
         public DateTimeOffset? ExpirationDate { get; set; }
 
         public string UserId { get; set; }
-
-        public string ExistinctEntityId { get; set; }
     }
 }
