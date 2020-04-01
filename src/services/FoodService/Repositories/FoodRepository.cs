@@ -1,7 +1,5 @@
-﻿using MongoDB.Bson;
-using MongoDB.Driver;
+﻿using MongoDB.Driver;
 using FoodService.DBContext;
-using FoodService.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using FoodService.Entities;
@@ -17,21 +15,21 @@ namespace FoodService.Repositories
             _context = context;
         }
 
-        public Task<List<Food>> GetAll()
+        public Task<List<Food>> GetAll(string userId)
         {
             return _context
                 .Food
-                .Find(x => true)
+                .Find(x => x.UserId == userId)
                 .SortBy(x => x.Name)
                 .ToListAsync();
         }
 
 
-        public Task<Food> Get(string id)
+        public Task<Food> Get(string id, string userId)
         {
             return _context
                     .Food
-                    .Find(s => s.Id == id)
+                    .Find(s => s.Id == id && s.UserId == userId)
                     .FirstOrDefaultAsync();
         }
 

@@ -1,9 +1,9 @@
 ﻿using FoodService.Entities;
 using FoodService.Models;
 using FoodService.Repositories;
+using Infrastructure.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -25,7 +25,7 @@ namespace FoodService.Controllers
         [HttpGet]
         public async Task<ActionResult<List<FoodModel>>> Get()
         {
-            return new ObjectResult((await foodRepository.GetAll())
+            return new ObjectResult((await foodRepository.GetAll(User.GetLoggedInUserId()))
                 .Select(MapToModel)
                 .ToList());
         }
@@ -33,7 +33,7 @@ namespace FoodService.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<FoodModel>> Get(string id)
         {
-            var food = await foodRepository.Get(id);
+            var food = await foodRepository.Get(id, User.GetLoggedInUserId());
             if (food == null)
             {
                 return new NotFoundResult();
@@ -51,7 +51,7 @@ namespace FoodService.Controllers
                 Amount = foodModel.Amount,
                 Description = foodModel.Description,
                 ExpirationDate = foodModel.ExpirationDate,
-                UserId = new Guid()
+                UserId = User.GetLoggedInUserId()
             };
 
             await foodRepository.Create(food);
@@ -62,7 +62,7 @@ namespace FoodService.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult<FoodModel>> Update(string id, [FromBody] FoodModel module)
         {
-            var food = await foodRepository.Get(id);
+            var food = await foodRepository.Get(id, User.GetLoggedInUserId());
             if (food == null)
             {
                 return new NotFoundResult();
@@ -81,7 +81,7 @@ namespace FoodService.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
-            var food = await foodRepository.Get(id);
+            var food = await foodRepository.Get(id, User.GetLoggedInUserId());
             if (food == null)
             {
                 return new NotFoundResult();

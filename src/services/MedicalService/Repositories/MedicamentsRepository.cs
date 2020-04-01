@@ -15,21 +15,21 @@ namespace MedicalService.Repositories
             _context = context;
         }
 
-        public Task<List<Medicaments>> GetAll()
+        public Task<List<Medicaments>> GetAll(string userId)
         {
             return _context
                 .Medicaments
-                .Find(x => true)
+                .Find(x => x.UserId == userId)
                 .SortBy(x => x.Name)
                 .ToListAsync();
         }
 
 
-        public Task<Medicaments> Get(string id)
+        public Task<Medicaments> Get(string id, string userId)
         {
             return _context
                     .Medicaments
-                    .Find(s => s.Id == id)
+                    .Find(s => s.Id == id && s.UserId == userId)
                     .FirstOrDefaultAsync();
         }
 

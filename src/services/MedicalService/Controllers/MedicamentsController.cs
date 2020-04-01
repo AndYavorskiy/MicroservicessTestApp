@@ -1,4 +1,5 @@
-﻿using MedicalService.Entities;
+﻿using Infrastructure.Extensions;
+using MedicalService.Entities;
 using MedicalService.Models;
 using MedicalService.Repositories;
 using Microsoft.AspNetCore.Authorization;
@@ -28,7 +29,7 @@ namespace MedicalService.Controllers
         [HttpGet]
         public async Task<ActionResult<List<MedicamentsModel>>> Get()
         {
-            return new ObjectResult((await medicamentsRepository.GetAll())
+            return new ObjectResult((await medicamentsRepository.GetAll(User.GetLoggedInUserId()))
                 .Select(MapToModel)
                 .ToList());
         }
@@ -36,7 +37,7 @@ namespace MedicalService.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<MedicamentsModel>> Get(string id)
         {
-            var food = await medicamentsRepository.Get(id);
+            var food = await medicamentsRepository.Get(id, User.GetLoggedInUserId());
             if (food == null)
             {
                 return new NotFoundResult();
@@ -54,7 +55,7 @@ namespace MedicalService.Controllers
                 Amount = foodModel.Amount,
                 Description = foodModel.Description,
                 ExpirationDate = foodModel.ExpirationDate,
-                UserId = new Guid()
+                UserId = User.GetLoggedInUserId()
             };
 
             await medicamentsRepository.Create(food);
@@ -65,7 +66,7 @@ namespace MedicalService.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult<MedicamentsModel>> Update(string id, [FromBody] MedicamentsModel module)
         {
-            var food = await medicamentsRepository.Get(id);
+            var food = await medicamentsRepository.Get(id, User.GetLoggedInUserId());
             if (food == null)
             {
                 return new NotFoundResult();
@@ -84,7 +85,7 @@ namespace MedicalService.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
-            var food = await medicamentsRepository.Get(id);
+            var food = await medicamentsRepository.Get(id, User.GetLoggedInUserId());
             if (food == null)
             {
                 return new NotFoundResult();

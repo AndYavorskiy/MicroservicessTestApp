@@ -6,9 +6,9 @@ namespace BasketService.Repositories
 {
     public interface IBasketItemRepository
     {
-        Task<List<BasketItem>> GetAll();
+        Task<List<BasketItem>> GetAll(string userId);
 
-        Task<BasketItem> Get(string id);
+        Task<BasketItem> Get(string id, string userId);
 
         Task<BasketItem> Create(BasketItem module);
 

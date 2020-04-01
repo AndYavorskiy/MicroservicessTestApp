@@ -1,6 +1,7 @@
 ﻿using BasketService.Entities;
 using BasketService.Models;
 using BasketService.Repositories;
+using Infrastructure.Extensions;
 using Infrastructure.RabbitMQ;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -35,7 +36,7 @@ namespace BasketService.Controllers
         [HttpGet]
         public async Task<ActionResult<List<BasketItemModel>>> GetAll()
         {
-            return new ObjectResult((await basketItemRepository.GetAll())
+            return new ObjectResult((await basketItemRepository.GetAll(User.GetLoggedInUserId()))
                 .Select(MapToModel)
                 .ToList());
         }
@@ -43,7 +44,7 @@ namespace BasketService.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<BasketItemModel>> Get(string id)
         {
-            var basketItem = await basketItemRepository.Get(id);
+            var basketItem = await basketItemRepository.Get(id, User.GetLoggedInUserId());
             if (basketItem == null)
             {
                 return new NotFoundResult();
@@ -61,7 +62,7 @@ namespace BasketService.Controllers
                 Amount = basketItemModel.Amount,
                 Description = basketItemModel.Description,
                 ExistinctEntityId = basketItemModel.ExistinctEntityId,
-                UserId = new Guid(),
+                UserId = User.GetLoggedInUserId(),
                 DateCreated = basketItemModel.DateCreated,
                 ItemType = basketItemModel.ItemType
             };
@@ -83,7 +84,7 @@ namespace BasketService.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult<BasketItemModel>> Update(string id, [FromBody] BasketItemModel basketItemModel)
         {
-            var basketItem = await basketItemRepository.Get(id);
+            var basketItem = await basketItemRepository.Get(id, User.GetLoggedInUserId());
             if (basketItem == null)
             {
                 return new NotFoundResult();
@@ -104,7 +105,7 @@ namespace BasketService.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
-            var food = await basketItemRepository.Get(id);
+            var food = await basketItemRepository.Get(id, User.GetLoggedInUserId());
             if (food == null)
             {
                 return new NotFoundResult();
@@ -118,7 +119,7 @@ namespace BasketService.Controllers
         [HttpPost("complete")]
         public async Task<ActionResult> CompletePurchase([FromBody] BasketCompletePurchaseModel completePurchaseModel)
         {
-            var basketItem = await basketItemRepository.Get(completePurchaseModel.Id);
+            var basketItem = await basketItemRepository.Get(completePurchaseModel.Id, User.GetLoggedInUserId());
 
             if (basketItem == null)
             {

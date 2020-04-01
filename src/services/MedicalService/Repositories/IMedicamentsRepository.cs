@@ -6,9 +6,9 @@ namespace MedicalService.Repositories
 {
     public interface IMedicamentsRepository
     {
-        Task<List<Medicaments>> GetAll();
+        Task<List<Medicaments>> GetAll(string userId);
 
-        Task<Medicaments> Get(string id);
+        Task<Medicaments> Get(string id, string userId);
 
         Task<Medicaments> Create(Medicaments medicaments);
 

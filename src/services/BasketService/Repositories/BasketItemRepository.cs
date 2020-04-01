@@ -15,21 +15,21 @@ namespace BasketService.Repositories
             _context = context;
         }
 
-        public Task<List<BasketItem>> GetAll()
+        public Task<List<BasketItem>> GetAll(string userId)
         {
             return _context
                 .BasketItems
-                .Find(x => true)
+                .Find(x => x.UserId == userId)
                 .SortBy(x => x.Name)
                 .ToListAsync();
         }
 
 
-        public Task<BasketItem> Get(string id)
+        public Task<BasketItem> Get(string id, string userId)
         {
             return _context
                     .BasketItems
-                    .Find(s => s.Id == id)
+                    .Find(s => s.Id == id && s.UserId == userId)
                     .FirstOrDefaultAsync();
         }
 

@@ -6,9 +6,9 @@ namespace FoodService.Repositories
 {
     public interface IFoodRepository
     {
-        Task<List<Food>> GetAll();
+        Task<List<Food>> GetAll(string userId);
 
-        Task<Food> Get(string id);
+        Task<Food> Get(string id, string userId);
 
         Task<Food> Create(Food food);
 
