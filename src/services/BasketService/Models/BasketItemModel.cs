@@ -11,6 +11,8 @@ namespace BasketService.Models
 
         public string Amount { get; set; }
 
+        public string Hint { get; set; }
+
         public string Description { get; set; }
 
         public BasketItemType ItemType { get; set; }

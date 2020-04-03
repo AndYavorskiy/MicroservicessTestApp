@@ -60,6 +60,7 @@ namespace BasketService.Controllers
             {
                 Name = basketItemModel.Name,
                 Amount = basketItemModel.Amount,
+                Hint = basketItemModel.Hint,
                 Description = basketItemModel.Description,
                 UserId = User.GetLoggedInUserId(),
                 DateCreated = basketItemModel.DateCreated,
@@ -91,6 +92,7 @@ namespace BasketService.Controllers
 
             basketItem.Name = basketItemModel.Name;
             basketItem.Amount = basketItemModel.Amount;
+            basketItem.Hint = basketItemModel.Hint;
             basketItem.Description = basketItemModel.Description;
             basketItem.DateCreated = basketItemModel.DateCreated;
             basketItem.ItemType = basketItemModel.ItemType;
@@ -156,15 +158,16 @@ namespace BasketService.Controllers
         }
 
 
-        private static BasketItemModel MapToModel(BasketItem food) => new BasketItemModel
+        private static BasketItemModel MapToModel(BasketItem item) => new BasketItemModel
         {
-            Id = food.Id,
-            Name = food.Name,
-            Amount = food.Amount,
-            Description = food.Description,
-            DateCreated = food.DateCreated,
-            ItemType = food.ItemType,
-            UserId = food.UserId
+            Id = item.Id,
+            Name = item.Name,
+            Amount = item.Amount,
+            Description = item.Description,
+            Hint = item.Hint,
+            DateCreated = item.DateCreated,
+            ItemType = item.ItemType,
+            UserId = item.UserId
         };
     }
 }
